@@ -6,8 +6,8 @@ __lua__
 bx = 62
 by = 62
 
-bdx = 1
-bdy = 1
+bdx = 3
+bdy = 3
 
 
 
@@ -23,21 +23,21 @@ by += bdy
 
 -- x
 if bx > 127 then
-	bdx = -1
+	bdx = -3
 end
 
 if bx < 0 then
-	bdx = 1
+	bdx = 3
 end
 
 --y
 
 if by > 127 then
-	bdy = -1
+	bdy = -3
 end
 
 if by < 0 then
-	bdy = 1
+	bdy = 3
 end
 
 
