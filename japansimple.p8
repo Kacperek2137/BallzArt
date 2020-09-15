@@ -2,6 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
 function _init()
+	-- pad setup
 	pad_x = 55
 	pad_y = 63
 	pad_position = ""
@@ -10,7 +11,7 @@ function _init()
 	pad_color = 6
 
 	-- ball setup
-	ball_radius = 2
+	ball_radius = 5
 	ball_x = 37
 	ball_y = 20
 	ball_dx = 3
@@ -21,9 +22,11 @@ function _init()
 	target_x = rnd(100)
 	target_y = 6
 	target_radius = 5
-	target_dx = 1
+	target_dm = 0.1
+	-- initial setup for top left of the screen
+	target_dx = target_dm
 	target_dy = 0
-	target_d = 1
+	-- max speed
 
 
 	-- bad target setup
@@ -32,11 +35,16 @@ function _init()
 	badtarget_radius = 5
 	badtarget_dx = -0.1
 
+	--score setup
+	score = 0
+
 
 	--debug monitor cleanup
 	for i=1, 100 do
 		printh("")
 	end
+
+
 
 end
 
@@ -50,12 +58,12 @@ target_y += target_dy
 -- top right corner hit
 if target_x > 120 and target_y < 120 then
 	target_dx = 0
-	target_dy = 1
+	target_dy = target_dm
 end
 
 -- bottom right corner hit
 if target_x > 120 and target_y > 120 then
-	target_dx = -1
+	target_dx = -target_dm
 	target_dy = 0
 end
 
@@ -63,12 +71,12 @@ end
 -- bottom left corner hit
 if target_x < 7 and target_y > 120 then
 	target_dx = 0
-	target_dy = -1
+	target_dy = -target_dm
 end
 
 -- top left corner hit
 if target_x < 7 and target_y < 7 then
-	target_dx = 1
+	target_dx = target_dm
 	target_dy = 0
 end
 printh(target_dx)
@@ -140,10 +148,11 @@ end
 -- target collision
 if ball_box(target_x, target_y, target_radius, target_radius) then
 	--target_x = rnd(100)
-	target_x = 5
+	target_x = 5 + rnd (100)
 	target_y = 6
-	target_dx = 1
+	target_dx = target_dm
 	target_dy = 0
+	score += 1
 
 end
 
@@ -163,6 +172,8 @@ function _draw()
 	cls()
 	-- background
 	rectfill(0,0,127,127,15)
+
+	print(score,1,1,12)
 
 	-- tray of line
 	rect(5,5,122,122,5)
