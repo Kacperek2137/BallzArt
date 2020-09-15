@@ -1,20 +1,20 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
-pad_x = 50
-pad_y = 50
-pad_position = ""
-pad_width = 20
-pad_height = 2
-
--- ball setup
-ball_radius = 2
-ball_x = 37
-ball_y = 20
-ball_dx = 1
-ball_dy = 1
-
 function _init()
+	pad_x = 50
+	pad_y = 50
+	pad_position = ""
+	pad_width = 20
+	pad_height = 2
+	pad_color = 6
+
+	-- ball setup
+	ball_radius = 2
+	ball_x = 37
+	ball_y = 20
+	ball_dx = 1
+	ball_dy = 1
 
 end
 
@@ -61,10 +61,12 @@ if (btn(3)) then
  pad_position = "vertical"
 end
 
--- coliision detection invoke
-
+pad_color = 7
+-- check if ball hit pad
 if ball_box(pad_x, pad_y, pad_width, pad_height) then
 	-- deal with collision
+	pad_color = 8
+	ball_dy = - ball_dy
 end
 
 
@@ -77,11 +79,11 @@ function _draw()
 	
 	-- player pad
 	if pad_position == "horizontal" then
-		rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, 8)
+		rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
 	end
 	
 	if pad_position == "vertical" then
-		rectfill(pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,pad_y - pad_width / 2 ,pad_x + pad_width /2, pad_y + pad_width / 2, 8)
+		rectfill(pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,pad_y - pad_width / 2 ,pad_x + pad_width /2, pad_y + pad_width / 2, pad_color)
 	end
 	
 	--ball
@@ -90,6 +92,7 @@ function _draw()
 end
 
 function ball_box(box_x, box_y, box_width, box_height)
+	--checks the collision of a ball with a rectangle
 	-- top edge check
 	if ball_y - ball_radius > box_y + box_height then
 		return false
