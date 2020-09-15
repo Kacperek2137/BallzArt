@@ -10,11 +10,26 @@ function _init()
 	pad_color = 6
 
 	-- ball setup
-	ball_radius = 2
+	ball_radius = 5
 	ball_x = 37
 	ball_y = 20
-	ball_dx = 1
-	ball_dy = 1
+	ball_dx = 2
+	ball_dy = 2
+
+
+	-- target setup
+	target_x = rnd(100)
+	target_y = 7
+	target_radius = 5
+	target_dx = 0.1
+
+
+	-- bad target setup
+	badtarget_x = rnd(100)
+	badtarget_y = 120
+	badtarget_radius = 5
+	badtarget_dx = -0.1
+
 
 	--debug monitor cleanup
 	for i=1, 100 do
@@ -24,56 +39,100 @@ function _init()
 end
 
 function _update()
+
+-- target movement
+
+target_x += target_dx
+
+if target_x > 127 then
+	target_dx = -0.1
+end
+
+if target_x < 0 then
+	target_dx = 0.1
+end
+
+printh(target_dx)
+
+-- badtarget movement
+
+badtarget_x += badtarget_dx
+
+if badtarget_x > 127 then
+	badtarget_dx = -0.1
+end
+
+if badtarget_x < 0 then
+	badtarget_dx = 0.1
+end
+
+printh(target_dx)
+
+-- ball movement
+
 ball_x += ball_dx
 ball_y += ball_dy
 
 if ball_x > 127 then
-	ball_dx = -1
+	ball_dx = -2
 end
 
 if ball_x < 0 then
-	ball_dx = 1
+	ball_dx = 2
 end
 
 if ball_y > 127 then
-	ball_dy = -1
+	ball_dy = -2
 end
 
 if ball_y < 0 then
-	ball_dy = 1
+	ball_dy = 2
 end
 
 -- horizontal
 if (btn(0)) then
  pad_x -= 3
- pad_position = "horizontal"
 end
 
 if (btn(1)) then
  pad_x += 3
- pad_position = "horizontal"
 end
 
 -- vertical 
 
-if (btn(2)) then
- pad_y -= 3
- pad_position = "vertical"
-end
+-- if (btn(2)) then
+--  pad_y -= 3
+-- end
 
-if (btn(3)) then
- pad_y += 3
- pad_position = "vertical"
-end
+-- if (btn(3)) then
+--  pad_y += 3
+-- end
 
 pad_color = 7
 -- check if ball hit pad
-if ball_box(pad_x, pad_y, pad_width, pad_height) then
+if ball_box(pad_x, pad_y, pad_width + 30, pad_height + 30) then
 	-- deal with collision
 	pad_color = 8
 	sfx(0)
-	-- ball_dy = - ball_dy
+	ball_dy = - ball_dy
 end
+
+
+-- target collision
+if ball_box(target_x, target_y, target_radius, target_radius) then
+	target_x = rnd(100)
+	target_y = rnd(20) 
+
+end
+
+
+-- badtarget collision
+if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
+	badtarget_x = rnd(100)
+	badtarget_y = rnd(20) + 100
+
+end
+
 
 
 end
@@ -83,15 +142,16 @@ function _draw()
 	-- background
 	rectfill(0,0,127,127,15)
 
+	-- target
+	circfill(target_x,target_y,target_radius,11)
+
 	
+	-- bad target
+	circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+
 	-- player pad
-	if pad_position == "horizontal" then
-		rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-	end
+	rectfill(pad_x, pad_y, pad_x + 30, pad_y + 30, pad_color)
 	
-	if pad_position == "vertical" then
-		rectfill(pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2 ,pad_y - pad_width / 2 ,pad_x + pad_width /2, pad_y + pad_width / 2, pad_color)
-	end
 	
 	--ball
 	circfill(ball_x,ball_y,ball_radius, 9)
@@ -100,23 +160,6 @@ end
 
 function ball_box(box_x, box_y, box_width, box_height)
 	--checks the collision of a ball with a rectangle
-	if pad_position == "horizontal" then
-		-- we do nothing
-		printh("collision")
-	end
-
-	if pad_position == "vertical" then
-		-- we need to change the box values
-		box_x = box_x + box_width / 2 - box_height / 2 
-		--printh(box_x)
-		box_y = box_y - box_width / 2
-
-		box_width = box_height
-		box_height = box_width
-
-		printh(box_x, box_y)
-
-	end
 	-- top edge check
 	if ball_y - ball_radius > box_y + box_height then
 		return false
