@@ -34,6 +34,7 @@ Jeżeli gracz trafi niewłaściwy składnik, suma punktów za jego zamówienie s
     
 #### User Persona
 
+``
 Filip Retrokiewicz
 
 	* wiek: 18 lat 
@@ -51,7 +52,10 @@ Filip Retrokiewicz
 	* technologia
 	* książki SIFI
 	* bio:
+
 Filip jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa. Jest uczniem liceum i jego pasją życiową są  gry. Lubi grać, chociaż bardziej zajmuje się ich projektowaniem w wolnych chwilach. Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
+
+``
 
 #### User Journey Map
 
@@ -62,7 +66,7 @@ Ekran startowy --> Główna pętla --> Restart / Wyjście
 
 ## Styl graficzny
 
-!(moodboard)[https://pin.it/2z1A40b]
+![moodboard](https://pin.it/2z1A40b)
 
 ## Muzyka / dzwięk
 
