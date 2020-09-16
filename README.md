@@ -53,7 +53,11 @@ Filip Retrokiewicz
 	* książki SIFI
 	* bio:
 
-Filip jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa. Jest uczniem liceum i jego pasją życiową są  gry. Lubi grać, chociaż bardziej zajmuje się ich projektowaniem w wolnych chwilach. Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
+Filip jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa.
+Jest uczniem liceum i jego pasją życiową są  gry.
+Lubi grać, a nawet trochę uczy się ich projektowaniaw wolnych chwilach.
+Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
+
 
 ```
 
