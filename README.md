@@ -1,6 +1,6 @@
 # Picomaki
 
-![recent gif](gif/japansimple_2.gif)
+![recent gif](gif/japansimple_3.gif)
 
 ## Dlaczego nasza gra jest warta uwagi?
 
