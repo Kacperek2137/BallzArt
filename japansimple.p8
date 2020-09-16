@@ -22,6 +22,7 @@ function _init()
 	target_x = rnd(100)
 	target_y = 6
 	target_radius = 5
+	-- max speed
 	target_dm = 0.1
 	-- initial setup for top left of the screen
 	target_dx = target_dm
@@ -33,16 +34,17 @@ function _init()
 	badtarget_x = rnd(100)
 	badtarget_y = 122
 	badtarget_radius = 5
-	badtarget_dx = -0.1
+	-- max speed
+	badtarget_dm = 0.1
+	-- initial setup for bottom right corner
+	badtarget_dx = - badtarget_dm
+	badtarget_dy = 0
 
 	--score setup
 	score = 0
 
 
 	--debug monitor cleanup
-	for i=1, 100 do
-		printh("")
-	end
 
 
 
@@ -79,21 +81,36 @@ if target_x < 7 and target_y < 7 then
 	target_dx = target_dm
 	target_dy = 0
 end
-printh(target_dx)
 
 -- badtarget movement
 
 badtarget_x += badtarget_dx
+badtarget_y += badtarget_dy
 
-if badtarget_x > 127 then
-	badtarget_dx = -0.1
+-- top right corner hit
+if badtarget_x > 120 and badtarget_y < 120 then
+	badtarget_dx = 0
+	badtarget_dy = badtarget_dm
 end
 
-if badtarget_x < 0 then
-	badtarget_dx = 0.1
+-- bottom right corner hit
+if badtarget_x > 120 and badtarget_y > 120 then
+	badtarget_dx = -badtarget_dm
+	badtarget_dy = 0
 end
 
-printh(target_dx)
+
+-- bottom left corner hit
+if badtarget_x < 7 and badtarget_y > 120 then
+	badtarget_dx = 0
+	badtarget_dy = -badtarget_dm
+end
+
+-- top left corner hit
+if badtarget_x < 7 and badtarget_y < 7 then
+	badtarget_dx = badtarget_dm
+	badtarget_dy = 0
+end
 
 -- ball movement
 
@@ -159,21 +176,29 @@ end
 
 -- badtarget collision
 if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
-	badtarget_x = rnd(100)
-	badtarget_y = rnd(20) + 100
+	badtarget_x =  5 + rnd(100)
+	badtarget_y = 122
+	badtarget_dx = - badtarget_dm 
+	badtarget_dy = 0
+	score -= 1
 
 end
 
 
 
 end
+
 
 function _draw()
 	cls()
 	-- background
 	rectfill(0,0,127,127,15)
 
-	print(score,1,1,12)
+	-- target score
+	print(score,60,75,11)
+
+	--timer
+	print(flr(time()), 64, 10, 0)
 
 	-- tray of line
 	rect(5,5,122,122,5)
@@ -183,7 +208,8 @@ function _draw()
 
 	
 	-- bad target
-	--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+	circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+
 
 	-- player pad
 	rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
