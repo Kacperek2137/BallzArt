@@ -28,7 +28,7 @@ Jeżeli gracz trafi niewłaściwy składnik, suma punktów za jego zamówienie s
 ### UI:
     * stetowanie nożem za pomocą przycisków ⬅️ i ➡️
     * interfejs zamówień, czasu i składników wyświetlany na środku ekranu
-    * ekran: 128 x 128 px - limit narzucony przez silnik
+    * ekran na planie kwadratu
     
 ### User Experience:
     
@@ -63,14 +63,12 @@ Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
 
 #### User Journey Map
 
-WIP
-
 Ekran startowy --> Główna pętla --> Restart / Wyjście
 
 
 ## Styl graficzny
 
-![moodboard](https://pin.it/2z1A40b)
+[moodboard](https://pin.it/2z1A40b)
 
 ## Muzyka / dzwięk
 
@@ -79,8 +77,8 @@ Ekran startowy --> Główna pętla --> Restart / Wyjście
 	* Dzwięki trafiania w otpowiednie składniki, 
 	* Złe składniki
 ### Dzwięki informujące:
-	* Gracz zostaje powiadomiony o nowych zamówieniach, 
-	* Upływającym czasie na obecne zamówienia
+	* Gracz zostaje powiadomiony o nowych zamówieniach
+	* Upływający czas na obecne zamówienia
 
 ### Muzyka
 Muzyka nawiązująca do tradycyjnej muzyki japońskiej, pianino i instrumenty smyczkowe, flet
