@@ -94,3 +94,4 @@ Muzyka jako tło gameplayu
 ![gif](gif/japansimple_0.gif)
 ![gif](gif/japansimple_1.gif)
 ![gif](gif/japansimple_2.gif)
+![gif](gif/japansimple_3.gif)

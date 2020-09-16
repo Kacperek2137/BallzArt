@@ -23,10 +23,22 @@ function _init()
 	target_y = 6
 	target_radius = 5
 	-- max speed
-	target_dm = 0.1
+	target_dm = 0.5
 	-- initial setup for top left of the screen
 	target_dx = target_dm
 	target_dy = 0
+
+
+	-- sec target setup
+
+	sectarget_x = 6
+	sectarget_y = rnd(100)
+	sectarget_radius = 5
+	-- max speed
+	sectarget_dm = 0.5
+	-- initial setup for top left of the screen
+	sectarget_dx = 0
+	sectarget_dy = -target_dm
 	-- max speed
 
 
@@ -35,7 +47,7 @@ function _init()
 	badtarget_y = 122
 	badtarget_radius = 5
 	-- max speed
-	badtarget_dm = 0.1
+	badtarget_dm = 0.5
 	-- initial setup for bottom right corner
 	badtarget_dx = - badtarget_dm
 	badtarget_dy = 0
@@ -80,6 +92,37 @@ end
 if target_x < 7 and target_y < 7 then
 	target_dx = target_dm
 	target_dy = 0
+end
+
+
+-- sectarget movement
+
+sectarget_x += sectarget_dx
+sectarget_y += sectarget_dy
+
+-- top right corner hit
+if sectarget_x > 120 and sectarget_y < 120 then
+	sectarget_dx = 0
+	sectarget_dy = sectarget_dm
+end
+
+-- bottom right corner hit
+if sectarget_x > 120 and sectarget_y > 120 then
+	sectarget_dx = -sectarget_dm
+	sectarget_dy = 0
+end
+
+
+-- bottom left corner hit
+if sectarget_x < 7 and sectarget_y > 120 then
+	sectarget_dx = 0
+	sectarget_dy = -sectarget_dm
+end
+
+-- top left corner hit
+if sectarget_x < 7 and sectarget_y < 7 then
+	sectarget_dx = sectarget_dm
+	sectarget_dy = 0
 end
 
 -- badtarget movement
@@ -174,12 +217,22 @@ if ball_box(target_x, target_y, target_radius, target_radius) then
 end
 
 
+-- sectarget collision
+if ball_box(sectarget_x, sectarget_y, sectarget_radius, sectarget_radius) then
+	--target_x = rnd(100)
+	sectarget_x = 5 + rnd (100)
+	sectarget_y = 6
+	sectarget_dx = sectarget_dm
+	sectarget_dy = 0
+	score += 1
+
+end
 -- badtarget collision
 if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
-	badtarget_x =  5 + rnd(100)
-	badtarget_y = 122
-	badtarget_dx = - badtarget_dm 
-	badtarget_dy = 0
+	badtarget_x =  5
+	badtarget_y = 5 + rnd(100)
+	badtarget_dx = 0
+	badtarget_dy = -badtarget_dm
 	score -= 1
 
 end
@@ -195,10 +248,10 @@ function _draw()
 	rectfill(0,0,127,127,15)
 
 	-- target score
-	print(score,60,75,11)
+	print(score,63,75,11)
 
 	--timer
-	print(flr(time()), 64, 10, 0)
+	print(flr(time()), 63, 85, 0)
 
 	-- tray of line
 	rect(5,5,122,122,5)
@@ -206,6 +259,8 @@ function _draw()
 	-- target
 	circfill(target_x,target_y,target_radius,11)
 
+	-- sectarget
+	circfill(sectarget_x,sectarget_y,sectarget_radius,11)
 	
 	-- bad target
 	circfill(badtarget_x,badtarget_y,badtarget_radius,8)
