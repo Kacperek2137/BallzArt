@@ -34,37 +34,24 @@ Jeżeli gracz trafi niewłaściwy składnik, suma punktów za jego zamówienie s
     
 #### User Persona
 
-🧑Filip Retrokiewicz
-	* wiek: 35 lat 
-	* zawód: serwisant komputerowy
-	* zainteresowania:
-		* gry wideo
-		* gry planszowe
-		* surfowanie internetu
-		* anime
-		* mangi
-		* seriale 
-		* programowanie
-		* technologia
-		* książki SIFI
-	* bio:
-Michał jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa Ma żonę i dwoje dzieci. Posiada wykształcenie średnie, w kierunku technika komputerowego. Pasję do informatyki zdobył od ojca, który sprowadził komputer do domu w czasie dzieciństwa Michała. Chciał studiować informatykę, ale matury mu nie poszły, więc zatrudnił się w serwisie informatycznym gdzie dobrze się odnajduje, chociaż często lubi uciekać ze swojej rzeczywistości do świata gier, w trakcie któtkich przerw w pracy. Po pracy z reguły zajmuje się opieką nad dziećmi, a w weekendy stara się uczyć programowania w Lua, żeby kiedyś móc pracować nie tylko przy hardwarze, ale również rozumieć i pisać software, w tym gry.
-
 Filip Retrokiewicz
+
 	* wiek: 18 lat 
 	* zawód: uczeń liceum
+
+
 	* zainteresowania:
-		* gry wideo
-		* gry planszowe
-		* surfowanie internetu
-		* anime
-		* mangi
-		* seriale 
-		* programowanie
-		* technologia
-		* książki SIFI
+	* gry wideo
+	* gry planszowe
+	* surfowanie internetu
+	* anime
+	* mangi
+	* seriale 
+	* programowanie
+	* technologia
+	* książki SIFI
 	* bio:
-Michał jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa. Jest uczniem liceum i jego pasją życiową są  gry. Lubi grać, chociaż bardziej zajmuje się ich projektowaniem w wolnych chwilach. Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
+Filip jest mieszkańcem Warszawy, chociaż pochodzi z Krakowa. Jest uczniem liceum i jego pasją życiową są  gry. Lubi grać, chociaż bardziej zajmuje się ich projektowaniem w wolnych chwilach. Czuje nostalgię do retro, chociaż nigdy nie miał ZX Spectrum.
 
 #### User Journey Map
 
