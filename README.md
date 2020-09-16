@@ -1,5 +1,7 @@
 # Picomaki
 
+![recent gif](gif/japan_0.gif)
+
 ## Dlaczego nasza gra jest warta uwagi?
 
 W Picomaki warto zagrać ponieważ dzięki tej grze zostaniesz mistrzem japońskiej kuchni. I gier też.
