@@ -1,6 +1,6 @@
 # Picomaki
 
-![recent gif](gif/japan_0.gif)
+![recent gif](gif/japansimple_2.gif)
 
 ## Dlaczego nasza gra jest warta uwagi?
 
@@ -87,6 +87,10 @@ Muzyka nawiązująca do tradycyjnej muzyki japońskiej, pianino i instrumenty sm
 Muzyka jako tło gameplayu
 
 
+## Postępy
 
-
-
+![gif](gif/japan_0.gif)
+![gif](gif/japan_1.gif)
+![gif](gif/japansimple_0.gif)
+![gif](gif/japansimple_1.gif)
+![gif](gif/japansimple_2.gif)
