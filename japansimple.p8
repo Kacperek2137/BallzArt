@@ -7,15 +7,22 @@ function _init()
 	pad_y = 63
 	pad_position = ""
 	pad_width = 20
-	pad_height = 2
-	pad_color = 6
+	pad_height = 3
+	pad_color = 3
+
+	pad_hitbox_x = 0
+	pad_hitbox_y = 0
+	pad_hitbox_width = 0
+	pad_hitbox_height= 0
 
 	-- ball setup
-	ball_radius = 5
+	ball_radius = 4
 	ball_x = 37
 	ball_y = 20
 	ball_dx = 3
 	ball_dy = 2
+	-- max speed
+	ball_dm = 2
 
 
 	-- target setup
@@ -161,50 +168,79 @@ ball_x += ball_dx
 ball_y += ball_dy
 
 if ball_x > 127 then
-	ball_dx = -2
+	ball_dx = -ball_dm
 end
 
 if ball_x < 0 then
-	ball_dx = 2
+	ball_dx = ball_dm
 end
 
 if ball_y > 127 then
-	ball_dy = -2
+	ball_dy = -ball_dm
 end
 
 if ball_y < 0 then
-	ball_dy = 2
+	ball_dy = ball_dm
 end
 
 -- horizontal
-if (btn(0)) then
+
+-- only one button can be held at a time
+if (btn(0)) and not (btn(2)) and not (btn(3)) then
  pad_x -= 3
+ pad_position = "horizontal"
 end
 
-if (btn(1)) then
+if (btn(1)) and not (btn(2)) and not (btn(3))then
  pad_x += 3
+ pad_position = "horizontal"
 end
 
 -- vertical pad movement 
 
  if (btn(2)) then
-  pad_y -= 3
+ pad_y -= 3
+ pad_position = "vertical"
 	end
 
  if (btn(3)) then
   pad_y += 3
+ pad_position = "vertical"
  end
 
 pad_color = 7
 -- check if ball hit pad
-if ball_box(pad_x, pad_y, pad_width, pad_height) then
+
+-- pad horizontal collistion
+if (pad_position == "horizontal") then
+	--everything is alright
+	pad_hitbox_x = pad_x
+	pad_hitbox_y = pad_y
+	pad_hitbox_width = pad_width
+	pad_hitbox_height= pad_height
+end
+-- pad vertical coliistion
+if (pad_position == "vertical") then
+	-- addusting the variables for the hitbox
+	pad_hitbox_x = pad_x + pad_width / 2 - pad_height / 2 
+	pad_hitbox_y = pad_y - pad_width / 2
+	pad_hitbox_width = pad_height
+	pad_hitbox_height= pad_width
+	pad_color = 2
+end
+-- pad collision check against the new variables
+if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
 	-- deal with collision
 	pad_color = 8
 	sfx(0)
+	if (pad_position == "horizontal") then
 	ball_dy = - ball_dy
+	end
+
+	if (pad_position == "vertical") then
+	ball_dx = - ball_dx
+	end
 end
-
-
 -- target collision
 if ball_box(target_x, target_y, target_radius, target_radius) then
 	--target_x = rnd(100)
@@ -247,6 +283,9 @@ function _draw()
 	-- background
 	rectfill(0,0,127,127,15)
 
+	-- platform rotation
+	print(pad_position,63,95,11)
+
 	-- target score
 	print(score,63,75,11)
 
@@ -267,8 +306,23 @@ function _draw()
 
 
 	-- player pad
-	rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+	--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
 	
+	--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
+
+	if pad_position == "horizontal" then
+		rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+	end
+	
+	if pad_position == "vertical" then
+		rectfill(
+		pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
+		pad_y - pad_width / 2,
+		pad_x + pad_width /2,
+		pad_y + pad_width / 2,
+		pad_color
+		)
+	end
 	
 	--ball
 	circfill(ball_x,ball_y,ball_radius, 9)
