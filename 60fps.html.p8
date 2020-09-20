@@ -5,7 +5,7 @@ function _init()
 	-- pad setup
 	pad_x = 55
 	pad_y = 63
-	pad_position = "horizontal"
+	pad_position = ""
 	pad_width = 20
 	pad_height = 3
 	pad_color = 3
@@ -19,10 +19,10 @@ function _init()
 	ball_radius = 4
 	ball_x = 37
 	ball_y = 20
+	ball_dx = 3
+	ball_dy = 2
 	-- max speed
 	ball_dm = 1
-	ball_dx = ball_dm
-	ball_dy = ball_dm
 
 
 	-- target setup
@@ -30,7 +30,7 @@ function _init()
 	target_y = 6
 	target_radius = 5
 	-- max speed
-	target_dm = 0.25
+	target_dm = 0.5
 	-- initial setup for top left of the screen
 	target_dx = target_dm
 	target_dy = 0
@@ -42,7 +42,7 @@ function _init()
 	sectarget_y = rnd(100)
 	sectarget_radius = 5
 	-- max speed
-	sectarget_dm = 0.25
+	sectarget_dm = 0.5
 	-- initial setup for top left of the screen
 	sectarget_dx = 0
 	sectarget_dy = -target_dm
@@ -54,7 +54,7 @@ function _init()
 	badtarget_y = 122
 	badtarget_radius = 5
 	-- max speed
-	badtarget_dm = 0.25
+	badtarget_dm = 0.5
 	-- initial setup for bottom right corner
 	badtarget_dx = - badtarget_dm
 	badtarget_dy = 0
@@ -232,6 +232,7 @@ if (pad_position == "vertical") then
 	pad_hitbox_y = pad_y - pad_width / 2
 	pad_hitbox_width = pad_height
 	pad_hitbox_height= pad_width
+	pad_color = 2
 end
 -- pad collision check against the new variables
 if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
