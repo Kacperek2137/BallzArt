@@ -16,7 +16,7 @@ function _init()
 	pad_hitbox_height= 0
 
 	-- ball setup
-	ball_radius = 4
+	ball_radius = 3
 	ball_x = 37
 	ball_y = 20
 	-- max speed
@@ -50,11 +50,12 @@ function _init()
 
 
 	-- bad target setup
+	badtarget_sprite = 1
 	badtarget_x = rnd(100)
 	badtarget_y = 122
 	badtarget_radius = 5
 	-- max speed
-	badtarget_dm = 0.25
+	badtarget_dm = 0.3
 	-- initial setup for bottom right corner
 	badtarget_dx = - badtarget_dm
 	badtarget_dy = 0
@@ -248,6 +249,7 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 end
 -- target collision
 if ball_box(target_x, target_y, target_radius, target_radius) then
+	sfx(1)
 	--target_x = rnd(100)
 	target_x = 5 + rnd (100)
 	target_y = 6
@@ -260,6 +262,7 @@ end
 
 -- sectarget collision
 if ball_box(sectarget_x, sectarget_y, sectarget_radius, sectarget_radius) then
+	sfx(1)
 	--target_x = rnd(100)
 	sectarget_x = 5 + rnd (100)
 	sectarget_y = 6
@@ -270,6 +273,7 @@ if ball_box(sectarget_x, sectarget_y, sectarget_radius, sectarget_radius) then
 end
 -- badtarget collision
 if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
+	sfx(1)
 	badtarget_x =  5
 	badtarget_y = 5 + rnd(100)
 	badtarget_dx = 0
@@ -290,7 +294,7 @@ function _draw()
 	rectfill(0,0,127,127,15)
 
 	-- platform rotation
-	print(pad_position,63,95,11)
+	--print(pad_position,63,95,11)
 
 	-- target score
 	print(score,63,75,11)
@@ -308,7 +312,8 @@ function _draw()
 	circfill(sectarget_x,sectarget_y,sectarget_radius,11)
 	
 	-- bad target
-	circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+	--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+	spr(badtarget_sprite,badtarget_x,badtarget_y)
 
 	-- player pad
 	--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
@@ -328,13 +333,17 @@ function _draw()
 		pad_color
 		)
 	end
+
+	-- particles
+	drawparts()
+	--print(#part,1,1,10)
 	
 	--ball
 	circfill(ball_x,ball_y,ball_radius, 9)
 
-	-- particles
-	drawparts()
-	print(#part,1,1,10)
+
+	--camera(pad_x - 64,pad_y - 64 )
+
 
 end
 
@@ -365,7 +374,7 @@ end
 -- particles
 
 -- adds a particle
-function addpart(_x,_y,_type,_maxage)
+function addpart(_x,_y,_type,_maxage,_col, _oldcol)
 	local _p = {}
 	_p.x = _x
 	_p.y = _y
@@ -373,6 +382,9 @@ function addpart(_x,_y,_type,_maxage)
 	_p.mage = _maxage
 	-- age starts at zero, goes to maxage
 	_p.age = 0
+	_p.col = _col
+	-- color near death
+	_p.oldcol = _oldcol
 
 	-- we're adding a particle to particle array
 	add(part,_p)
@@ -380,7 +392,13 @@ end
 
 -- sprawns a trail
 function spawntrail(_x, _y)
-	addpart(_x,_y,0,30 + rnd(15))
+	-- random angle
+	local _ang =  rnd()
+	-- random x and y offset
+	local _ox = sin(_ang) * ball_radius * 0.6
+	local _oy = cos(_ang) * ball_radius * 0.6
+
+	addpart(_x + _ox,_y + _oy,0,20 + rnd(15), 9, 10)
 end
 
 function updateparts()
@@ -388,8 +406,12 @@ function updateparts()
 	for i=#part,1, -1 do
 		_p = part[i]
 		_p.age += 1
-		if _p.age > _p.mage then
+		if (_p.age > _p.mage) then
 			del(part, part[i])
+		else
+			if (_p.age / _p.mage) > 0.6 then
+				_p.col = _p.oldcol
+			end
 		end
 	end
 end
@@ -397,25 +419,27 @@ end
 function drawparts()
 	for i = 1,#part do
 		_p = part[i]
-		print(_p.tpe,1,20,10)
+		--print(_p.tpe,1,20,10)
 		-- checks if particle is trail type
 		if _p.tpe == 0 then
-			print("PSET", 1,10, 10)
-			pset(_p.x,_p.y,9)
+			--print("PSET", 1,10, 10)
+			pset(_p.x,_p.y,_p.col)
 		else
 		end
 	end
 end
 __gfx__
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000bb0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000088888800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700888888880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000888888880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000888888880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700888888880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000088888800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000008888000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 000100001654014500005000050000500005000050000500005000050000500005000050000500005000050000500005000050000500005000050000500005000050000500005000050000500005000050000500
-010100002f0542d05429054270542405423054200541f0541b054190541805416054130501205010050100500e0500c0500c05009050080500705006050050500405001050000500005000000000000000000000
+000100000c5540f554105540d5540b554075540555404554075540d55410554185541d55025550265500e5000f5001050013500155001750018500175001a5001d5001f500005000050000500005000050000500
 __music__
 03 00014344
 
