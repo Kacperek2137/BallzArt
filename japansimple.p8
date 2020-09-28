@@ -19,7 +19,7 @@ function _init()
 	pad_hitbox_height= 0
 
 	-- ball setup
-	ball_radius = 3
+	ball_radius = 5
 	ball_x = 37
 	ball_y = 20
 	-- max speed
@@ -27,6 +27,8 @@ function _init()
 	ball_dx = ball_dm
 	ball_dy = ball_dm
 
+ -- ball angle
+	ball_ang = 1
 
 	-- target setup
 	target_x = rnd(100)
@@ -233,8 +235,8 @@ end
  end
  
  --pad clamp border
- pad_x = mid(10,pad_x,100)
- pad_y = mid(20,pad_y,100)
+ pad_x = mid(7,pad_x,100)
+ pad_y = mid(17,pad_y,110)
  
  if pad_position == "horizontal" then
  
@@ -268,8 +270,21 @@ end
 -- pad collision check against the new variables
 if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
 	-- deal with collision
+	
 	pad_color = 8
 	sfx(0)
+	
+	-- ball angle change
+	-- absolute value
+	if abs(pad_dx) > 2 then
+		-- change angle
+		
+		-- check if the pad and the ball are moving in the same direction
+	
+	end
+	
+	
+	
 	if (pad_position == "horizontal") then
 	ball_dy = - ball_dy
 	end
@@ -459,6 +474,37 @@ function drawparts()
 		end
 	end
 end
+
+-- ball angle changing
+function setang(ang)
+	ball_ang = ang
+	if ang == 2 then
+		ball_x = 0.50 * sign(ball_dx)
+		ball_y = 1.30 * sign(ball_dy)
+	elseif ang == 0 then
+		ball_x = 1.30 * sign(ball_dx)
+		ball_y = 0.50 * sign(ball_dy)
+	
+	else
+		ball_x = 1 * sign(ball_dx)
+		ball_y = 1 * sign(ball_dy)
+	
+	end
+end
+
+-- returns a sign (+,-) of a variable
+function sign(n)
+	if n<0 then
+		return -1
+	elseif n>0 then
+		return 1
+	else 
+		return 0
+
+	end
+end
+
+-- 15:21 
 __gfx__
 00000000000bb0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000088888800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
