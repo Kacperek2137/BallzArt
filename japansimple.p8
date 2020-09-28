@@ -5,6 +5,9 @@ function _init()
 	-- pad setup
 	pad_x = 55
 	pad_y = 63
+	--pad speed
+	pad_dx = 0
+	pad_dy = 0
 	pad_position = "horizontal"
 	pad_width = 20
 	pad_height = 3
@@ -72,7 +75,8 @@ function _init()
 end
 
 function _update60()
-
+-- local var if any button pressed
+local butpress = false
 -- trail particle
 spawntrail(ball_x, ball_y)
 
@@ -194,27 +198,54 @@ end
 
 -- only one button can be held at a time
 if (btn(0)) and not (btn(2)) and not (btn(3)) then
- pad_x -= 3
+ --pad_x -= 3
+ pad_dx = -3
+ butpress = true
  pad_position = "horizontal"
 end
 
 if (btn(1)) and not (btn(2)) and not (btn(3))then
- pad_x += 3
+ --pad_x += 3
+ pad_dx = 3
+ butpress = true
  pad_position = "horizontal"
 end
 
 -- vertical pad movement 
 
- if (btn(2)) then
- pad_y -= 3
+ if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
+ --pad_y -= 3
+ pad_dy = -3
+ butpress = true
  pad_position = "vertical"
 	end
 
- if (btn(3)) then
-  pad_y += 3
+ if (btn(3)) and not (btn(0)) then
+  --pad_y += 3
+  pad_dy =3
+  butpress = true
  pad_position = "vertical"
  end
+ 
+ if not(butpress) then
+ 	pad_dx = pad_dx/3
+ 	pad_dy = pad_dy/3
+ end
+ 
+ --pad clamp border
+ pad_x = mid(10,pad_x,100)
+ pad_y = mid(20,pad_y,100)
+ 
+ if pad_position == "horizontal" then
+ 
+ 	pad_x += pad_dx
+ end
+ 
+ if pad_position == "vertical" then
+ 
+ 	pad_y += pad_dy
 
+	end
 pad_color = 7
 -- check if ball hit pad
 
