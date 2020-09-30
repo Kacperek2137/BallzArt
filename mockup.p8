@@ -3,9 +3,34 @@ version 29
 __lua__
 cls()
 
+
+function _init()
 col = 7
+xbar = 1
+
+playerx = 10
+playery = 100
+end
+
+function _update()
+
+if btn(0) then
+playerx -= 1
+end
+
+if btn(1) then
+playerx += 1
+end
+
+
+end
 
 function _draw()
+cls()
+-- debug
+--rectfill(playerx, playery, playerx,playery,8)
+
+
 -- large sqare
 rect(0,0,127,127,col)
 -- small square
@@ -24,17 +49,13 @@ rectfill(51,57,72,59,col)
 
 
 -- score counter
-print("9999",54,21)
+print("9999",56,21)
 
 --orders
 
 -- main box
-rect(39,78,89,103,col)
+rect(39,78,88,98,col)
 
--- bar box
-rect(39,98,89,103,col)
--- progress bar
-rectfill(39,98,76,103,col)
 
 -- parts
 
@@ -51,10 +72,14 @@ spr(2,66,81)
 print("10",67,91)
 
 -- part 4
-spr(2,79,81)
+spr(2,78,81)
 print("10",78,91)
 
+-- progress box
+rect(39,98,88,103,col)
 
+-- progress bar
+rectfill(39,98,77,103,col)
 end
 __gfx__
 00000000000000007777777700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
