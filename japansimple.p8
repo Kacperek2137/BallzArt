@@ -27,7 +27,7 @@ function _init()
 	ball_dx = ball_dm
 	ball_dy = ball_dm
 
-	ball_ang = 0
+	ball_ang = 1
 
 	-- target setup
 	target_x = rnd(100)
@@ -280,9 +280,12 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 	
 	-- ball angle change
 	-- absolute value
+
+	--horizontal check
 	if abs(pad_dx) > 1 then
 		-- change angle
 		if sign(pad_dx) == sign(ball_dx) then
+
 			-- pad and ball moving in the same direction
 			-- flatten the angle
 			-- mid locks value above 0 
@@ -296,11 +299,29 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 		end
 		end
 		
-		-- check if the pad and the ball are moving in the same direction
 	
 	end
 	
 	
+	if abs(pad_dy) > 1 then
+		-- change angle
+		if sign(pad_dy) == sign(ball_dy) then
+
+			-- pad and ball moving in the same direction
+			-- flatten the angle
+			-- mid locks value above 0 
+			setang(mid(0,ball_ang+1,2))
+		else
+			-- raise angle
+			if ball_ang==2 then
+				ball_dy = - ball_dy
+			else
+			setang(mid(0,ball_ang-1,2))
+		end
+		end
+		
+	
+	end
 	
 	if (pad_position == "horizontal") then
 	ball_dy = - ball_dy
@@ -360,6 +381,8 @@ function _draw()
 	print(ball_ang,10,20,7)
 	print(ball_dx,10,30,8)
 	print(ball_dy,10,40,8)
+	print(sign(pad_dy),10,50,9)
+	print(sign(ball_dy),10,60,9)
 
 	-- platform rotation
 	--print(pad_position,63,95,11)
