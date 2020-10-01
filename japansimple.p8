@@ -9,7 +9,7 @@ function _init()
 	pad_dx = 0
 	pad_dy = 0
 	pad_position = "horizontal"
-	pad_width = 20
+	pad_width = 30
 	pad_height = 3
 	pad_color = 3
 
@@ -181,19 +181,23 @@ ball_y += ball_dy
 
 if ball_x > 127 then
 	ball_dx = -ball_dm
+	ball_dy = 1 * sign(ball_dy)
 
 end
 
 if ball_x < 0 then
 	ball_dx = ball_dm
+	ball_dy = 1 * sign(ball_dy)
 end
 
 if ball_y > 127 then
 	ball_dy = -ball_dm
+	ball_dx = 1 * sign(ball_dx)
 end
 
 if ball_y < 0 then
 	ball_dy = ball_dm
+	ball_dx = 1 * sign(ball_dx)
 end
 
 -- horizontal
