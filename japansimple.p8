@@ -27,8 +27,7 @@ function _init()
 	ball_dx = ball_dm
 	ball_dy = ball_dm
 
- -- ball angle
-	ball_ang = 1
+	ball_ang = 0
 
 	-- target setup
 	target_x = rnd(100)
@@ -182,6 +181,7 @@ ball_y += ball_dy
 
 if ball_x > 127 then
 	ball_dx = -ball_dm
+
 end
 
 if ball_x < 0 then
@@ -276,8 +276,21 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 	
 	-- ball angle change
 	-- absolute value
-	if abs(pad_dx) > 2 then
+	if abs(pad_dx) > 1 then
 		-- change angle
+		if sign(pad_dx) == sign(ball_dx) then
+			-- pad and ball moving in the same direction
+			-- flatten the angle
+			-- mid locks value above 0 
+			setang(mid(0,ball_ang-1,2))
+		else
+			-- raise angle
+			if ball_ang==2 then
+				ball_dx = - ball_dx
+			else
+			setang(mid(0,ball_ang+1,2))
+		end
+		end
 		
 		-- check if the pad and the ball are moving in the same direction
 	
@@ -338,6 +351,11 @@ function _draw()
 	cls()
 	-- background
 	rectfill(0,0,127,127,15)
+
+	--debug
+	print(ball_ang,10,20,7)
+	print(ball_dx,10,30,8)
+	print(ball_dy,10,40,8)
 
 	-- platform rotation
 	--print(pad_position,63,95,11)
@@ -479,15 +497,17 @@ end
 function setang(ang)
 	ball_ang = ang
 	if ang == 2 then
-		ball_x = 0.50 * sign(ball_dx)
-		ball_y = 1.30 * sign(ball_dy)
+		-- 0.50
+		-- 1.30
+		ball_dx = 0.50 * sign(ball_dx)
+		ball_dy = 1.30 * sign(ball_dy) 
 	elseif ang == 0 then
-		ball_x = 1.30 * sign(ball_dx)
-		ball_y = 0.50 * sign(ball_dy)
+		ball_dx = 1.30 * sign(ball_dx)
+		ball_dy = 0.50 * sign(ball_dy)
 	
 	else
-		ball_x = 1 * sign(ball_dx)
-		ball_y = 1 * sign(ball_dy)
+		ball_dx = 1 * sign(ball_dx)
+		ball_dy = 1 * sign(ball_dy)
 	
 	end
 end
