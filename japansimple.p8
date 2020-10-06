@@ -2,6 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
 function _init()
+	--debug
+	collision = false
+	-- background setup
+	line_col = 7
 	-- pad setup
 	pad_x = 55
 	pad_y = 63
@@ -18,17 +22,22 @@ function _init()
 	pad_hitbox_width = 0
 	pad_hitbox_height= 0
 
+
+	-- bouncebox left setup
+	--pad_bouncebox_left_x = 0
+	--pad_bouncebox_left_y = 0
+
+
 	-- ball setup
-	ball_radius = 5
+	ball_radius = 6
 	ball_x = 37
 	ball_y = 20
 	-- max speed
-	ball_dm = 1
+	ball_dm = 0.5
 	ball_dx = ball_dm
 	ball_dy = ball_dm
 
- -- ball angle
-	ball_ang = 1
+	ball_ang = 0
 
 	-- target setup
 	target_x = rnd(100)
@@ -77,15 +86,22 @@ function _init()
 end
 
 function _update60()
+
+
+collision = false
+
+
+
 -- local var if any button pressed
 local butpress = false
+
 -- trail particle
 spawntrail(ball_x, ball_y)
 
+-- updating the particles
 updateparts()
 
 -- target movement
-
 target_x += target_dx
 target_y += target_dy
 
@@ -180,20 +196,27 @@ end
 ball_x += ball_dx
 ball_y += ball_dy
 
-if ball_x > 127 then
+-- ball wall bouncing
+-- radius is added or removed for better collision detection
+if ball_x > 127 - ball_radius then
 	ball_dx = -ball_dm
+	ball_dy = 1 * sign(ball_dy)
+
 end
 
-if ball_x < 0 then
+if ball_x < 0 + ball_radius then
 	ball_dx = ball_dm
+	ball_dy = 1 * sign(ball_dy)
 end
 
-if ball_y > 127 then
+if ball_y > 111 - ball_radius then
 	ball_dy = -ball_dm
+	ball_dx = 1 * sign(ball_dx)
 end
 
-if ball_y < 0 then
+if ball_y < 0 + ball_radius then
 	ball_dy = ball_dm
+	ball_dx = 1 * sign(ball_dx)
 end
 
 -- horizontal
@@ -251,13 +274,17 @@ end
 pad_color = 7
 -- check if ball hit pad
 
--- pad horizontal collistion
+-- pad horizontal collision
 if (pad_position == "horizontal") then
 	--everything is alright
 	pad_hitbox_x = pad_x
 	pad_hitbox_y = pad_y
 	pad_hitbox_width = pad_width
-	pad_hitbox_height= pad_height
+	pad_hitbox_height = pad_height
+	
+	-- bouncebox left setup
+	--pad_bouncebox_left_x = pad_hitbox_x
+	--pad_bouncebox_left_y = pad_hitbox_y
 end
 -- pad vertical coliistion
 if (pad_position == "vertical") then
@@ -265,8 +292,26 @@ if (pad_position == "vertical") then
 	pad_hitbox_x = pad_x + pad_width / 2 - pad_height / 2 
 	pad_hitbox_y = pad_y - pad_width / 2
 	pad_hitbox_width = pad_height
-	pad_hitbox_height= pad_width
+	pad_hitbox_height = pad_width
+
+	-- bouncebox left setup
+	-- left meaning on top
 end
+
+
+
+--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height) then
+
+
+-- if (ball_box(pad_x - 1,pad_y,pad_x-1,pad_y + pad_height)) then
+-- 	ball_x = 5
+-- 
+-- 	pad_color = 11
+
+-- end
+
+
+
 -- pad collision check against the new variables
 if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
 	-- deal with collision
@@ -276,14 +321,48 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 	
 	-- ball angle change
 	-- absolute value
-	if abs(pad_dx) > 2 then
+
+	--horizontal check
+	if abs(pad_dx) > 1 then
 		-- change angle
+		if sign(pad_dx) == sign(ball_dx) then
+
+			-- pad and ball moving in the same direction
+			-- flatten the angle
+			-- mid locks value above 0 
+			setang(mid(0,ball_ang-1,2))
+		else
+			-- raise angle
+			if ball_ang==2 then
+				ball_dx = - ball_dx
+			else
+			setang(mid(0,ball_ang+1,2))
+		end
+		end
 		
-		-- check if the pad and the ball are moving in the same direction
 	
 	end
 	
 	
+	if abs(pad_dy) > 1 then
+		-- change angle
+		if sign(pad_dy) == sign(ball_dy) then
+
+			-- pad and ball moving in the same direction
+			-- flatten the angle
+			-- mid locks value above 0 
+			setang(mid(0,ball_ang+1,2))
+		else
+			-- raise angle
+			if ball_ang==2 then
+				ball_dy = - ball_dy
+			else
+			setang(mid(0,ball_ang-1,2))
+		end
+		end
+		
+	
+	end
 	
 	if (pad_position == "horizontal") then
 	ball_dy = - ball_dy
@@ -293,6 +372,9 @@ if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) t
 	ball_dx = - ball_dx
 	end
 end
+
+
+
 -- target collision
 if ball_box(target_x, target_y, target_radius, target_radius) then
 	sfx(1)
@@ -303,7 +385,9 @@ if ball_box(target_x, target_y, target_radius, target_radius) then
 	target_dy = 0
 	score += 1
 
+
 end
+
 
 
 -- sectarget collision
@@ -326,30 +410,108 @@ if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
 	badtarget_dy = -badtarget_dm
 	score -= 1
 
+
+end
+
+-- left pad check
+if ball_box(pad_x - 1, pad_y,1,pad_height) then
+	ball_x -= 4
+	ball_dx = - ball_dx
+
+end
+
+-- right pad check
+if ball_box(pad_x + pad_width, pad_y,1,pad_height) then
+	ball_x += 4
+	ball_dx = - ball_dx
+
+end
+ --rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height)
+
+--if pad_position == "horizontal" then
+
+	--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x + 0,pad_bouncebox_left_y+3) then
+	--	ball_x = 5
+	--	pad_color = 11
+	--end
+
+
+--end
+
+
+
 end
 
 
 
-end
+
+
+
 
 
 function _draw()
 
 	cls()
 	-- background
-	rectfill(0,0,127,127,15)
+	rectfill(0,0,128,128,0)
 
-	-- platform rotation
-	--print(pad_position,63,95,11)
 
-	-- target score
+	-- big box
+	rect(0,0,127,111,line_col)
+
+	-- small box
+	rect(13,13,114,98,line_col)
+	
+	-- serve boxes
+	rectfill(0,48,13,67,line_col)
+	rectfill(115,48,128,67,line_col)
+
+
+	-- test sprites
+	spr(1,60,101)
+	spr(1,117,81)
+	spr(1,3,23)
+
+
+	-- progress bar box
+	rect(0,124,127,127,line_col)
+
+	-- progress bar 
+	rectfill(0,124,84,127,line_col)
+
+	-- counter
+
+	-- counter 1
+	print(99,6,115)
+	-- sprite 1
+	spr(1,16,114)
+
+
+	-- counter 2
+	print(99,30,115)
+	-- sprite 2
+	spr(1,40,114)
+
+
+	-- counter 3
+	print(99,54,115)
+	-- sprite 3
+	spr(1,64,114)
+
+
+	-- counter 4
+	print(99,78,115)
+	-- sprite 4
+	spr(1,88,114)
+	
+	-- score bar
+	print(09999,102,115)
+
 	print(score,63,75,11)
 
 	--timer
 	print(flr(time()), 63, 85, 0)
 
-	-- tray of line
-	rect(5,5,122,122,5)
 
 	-- target
 	circfill(target_x,target_y,target_radius,11)
@@ -390,6 +552,12 @@ function _draw()
 
 	--camera(pad_x - 64,pad_y - 64 )
 
+	-- bouncebox left setup
+	--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
+
+
+
+	-- debug
 
 end
 
@@ -413,6 +581,7 @@ function ball_box(box_x, box_y, box_width, box_height)
 	end
 	
 	-- collision occured
+	collision = true
 	return true
 
 end
@@ -479,15 +648,17 @@ end
 function setang(ang)
 	ball_ang = ang
 	if ang == 2 then
-		ball_x = 0.50 * sign(ball_dx)
-		ball_y = 1.30 * sign(ball_dy)
+		-- 0.50
+		-- 1.30
+		ball_dx = 0.50 * sign(ball_dx)
+		ball_dy = 1.30 * sign(ball_dy) 
 	elseif ang == 0 then
-		ball_x = 1.30 * sign(ball_dx)
-		ball_y = 0.50 * sign(ball_dy)
+		ball_dx = 1.30 * sign(ball_dx)
+		ball_dy = 0.50 * sign(ball_dy)
 	
 	else
-		ball_x = 1 * sign(ball_dx)
-		ball_y = 1 * sign(ball_dy)
+		ball_dx = 1 * sign(ball_dx)
+		ball_dy = 1 * sign(ball_dy)
 	
 	end
 end
@@ -500,7 +671,6 @@ function sign(n)
 		return 1
 	else 
 		return 0
-
 	end
 end
 
