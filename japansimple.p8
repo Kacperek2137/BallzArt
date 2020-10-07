@@ -414,14 +414,14 @@ if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
 end
 
 -- left pad check
-if ball_box(pad_x - 1, pad_y,1,pad_height) then
+if ball_box(pad_x - 1, pad_y + 1,1,pad_height / 2) then
 	ball_x -= 4
 	ball_dx = - ball_dx
 
 end
 
 -- right pad check
-if ball_box(pad_x + pad_width, pad_y,1,pad_height) then
+if ball_box(pad_x + pad_width, pad_y + 1,1,pad_height / 2) then
 	ball_x += 4
 	ball_dx = - ball_dx
 
