@@ -413,19 +413,39 @@ if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
 
 end
 
--- left pad check
-if ball_box(pad_x - 1, pad_y + 1,1,pad_height / 2) then
-	ball_x -= 4
-	ball_dx = - ball_dx
+if pad_position == "horizontal" then
+
+
+	-- left pad check
+	if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+		ball_x -= 4
+
+	end
+
+	-- right pad check
+	if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+		ball_x += 4
+
+	end
+
 
 end
 
--- right pad check
-if ball_box(pad_x + pad_width, pad_y + 1,1,pad_height / 2) then
-	ball_x += 4
-	ball_dx = - ball_dx
+if pad_position == "vertical" then
 
+	-- top pad check
+	if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
+		ball_y -= 4
+	end
+
+
+	-- bottom pad check
+	if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
+		ball_y += 4
+	end
 end
+
+
  --rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height)
 
 --if pad_position == "horizontal" then
