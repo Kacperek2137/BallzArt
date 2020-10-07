@@ -662,11 +662,18 @@ function drawbackground()
 
 
 	-- big box
+
 	rect(0,0,127,111,line_col)
 
+
 	-- small box
-	rect(13,13,114,98,line_col)
-	
+	-- pattern test
+	fillp(0b1000010000100001)
+	rectfill(13,13,114,98,4)
+	fillp()
+
+	rect(13,13,114,98,4)
+
 	-- serve boxes
 	rectfill(0,0,13,13,line_col)
 	rectfill(114,98,127,111,line_col)
