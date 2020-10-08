@@ -54,8 +54,8 @@ print(ing_4,60,80,8)
 print("ing_5",30,90,6)
 print(ing_5,60,90,6)
 
-print("ing_types_ammount",10,100,8)
-print(ing_ammount,100,100,8)
+-- print("ing_types_ammount",10,100,8)
+-- print(ing_ammount,100,100,8)
 
 
 print("total_orders",10,110,9)
