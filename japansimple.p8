@@ -722,28 +722,44 @@ function drawbackground()
 	-- counter
 
 	-- number 1
-	print(ing_1,4,116)
+	if ing_1 == 0 then
+		print(ing_1,4,116,6)
+	else
+		print(ing_1,4,116,7)
+	end
 	-- sprite 1
 	spr(1,13,114)
 
 	-- number 2
-	print(ing_2,30,116)
+	if ing_2 == 0 then
+		print(ing_2,30,116,6)
+	else
+		print(ing_2,30,116,7)
+	end
 	-- sprite 2
 	spr(2,39,114)
 
 	-- number 3
-	print(ing_3,56,116)
+	if ing_3 == 0 then
+		print(ing_3,56,116,6)
+	else
+		print(ing_3,56,116,7)
+	end
 	-- sprite 3
 	spr(3,65,114)
 
 	-- number 4
-	print(ing_4,82,116)
+	if ing_4 == 0 then
+		print(ing_4,82,116,6)
+	else
+		print(ing_4,82,116,7)
+	end
 	-- sprite 4
 	spr(4,91,114)
 
 	
 	-- score bar
-	print(9999,108,116)
+	print(9999,108,116,7)
 
 
 end
