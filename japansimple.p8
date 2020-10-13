@@ -85,12 +85,44 @@ function _init()
 
 	-- particles setup
 	part = {}
+	
+
+	-- order system variables
+
+	ingr_total_number = 5
+	total_orders = 0
+
+	-- number of n per ingredient
+	ing_1 = 0
+	ing_2 = 0 
+	ing_3 = 0
+	ing_4 = 0 
+	ing_5 = 0
+
+	-- starting ing_types array
+	ing_types_start = {ing_1,ing_2,ing_3,ing_4,ing_5}
+
+	-- how many ing types will be in play in this round
+	ing_ammount = 0
+
+	-- how many ings in this order are left to be disposed between ing types
+	ing_to_dispose = 0
+
+	-- how many total ings are on the start
+	start_ing_to_dispose = 0
+
+
 
 
 end
 
 function _update60()
 
+--debug
+-- if x is pressed
+if btnp(5) then
+new_order()
+end
 
 collision = false
 
@@ -675,8 +707,8 @@ function drawbackground()
 	rect(13,13,114,98,4)
 
 	-- serve boxes
-	rectfill(0,0,13,13,line_col)
-	rectfill(114,98,127,111,line_col)
+	rectfill(0,0,12,12,line_col)
+	rectfill(115,99,127,111,line_col)
 
 
 
@@ -690,22 +722,22 @@ function drawbackground()
 	-- counter
 
 	-- number 1
-	print(99,4,116)
+	print(ing_1,4,116)
 	-- sprite 1
 	spr(1,13,114)
 
 	-- number 2
-	print(99,30,116)
+	print(ing_2,30,116)
 	-- sprite 2
 	spr(2,39,114)
 
 	-- number 3
-	print(99,56,116)
+	print(ing_3,56,116)
 	-- sprite 3
 	spr(3,65,114)
 
 	-- number 4
-	print(99,82,116)
+	print(ing_4,82,116)
 	-- sprite 4
 	spr(4,91,114)
 
@@ -716,7 +748,7 @@ function drawbackground()
 
 end
 
-
+-- debug
 function tomatoblink()
 	d -= 1
 	if d < 0 then
@@ -727,6 +759,48 @@ function tomatoblink()
 		d = 30
 	end
 
+end
+
+function new_order()
+total_orders += 1
+
+-- getting a num in <1,4> range
+ing_ammount = flr(rnd(4)) + 1
+ing_ammount = mid(1,ing_ammount,4)
+
+-- setting which ing_types will be used
+
+
+ing_to_dispose = flr(rnd(total_orders)) + 1
+ing_to_dispose = mid(ing_ammount * 2,ing_to_dispose,20)
+-- ing_to_dispose = mid(total_orders,ing_to_dispose,20)
+start_ing_to_dispose = ing_to_dispose
+
+
+-- assigning all ings to buckets
+
+-- first ing type operation
+if flr(rnd(1)) ==  0 then
+	ing_1 = flr(rnd(ing_to_dispose) / 2)
+	ing_to_dispose -= ing_1
+else
+	ing_1 = flr(rnd(ing_to_dispose))
+	ing_to_dispose -= ing_1
+
+end
+
+ing_2 = flr(rnd(ing_to_dispose))
+ing_to_dispose -= ing_2
+
+ing_3 = flr(rnd(ing_to_dispose))
+ing_to_dispose -= ing_3
+
+ing_4 = flr(rnd(ing_to_dispose))
+ing_to_dispose -= ing_4
+
+
+ing_5 = flr(ing_to_dispose)
+ing_to_dispose -= ing_2
 end
 
 __gfx__
