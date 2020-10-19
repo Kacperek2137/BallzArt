@@ -141,7 +141,7 @@ end
 if btnp(4) then
 	outline_col += 1
 	-- debug
-	add_ing(10,10,rnd(5))
+	add_ing(10,10,rnd(4) + 1 )
 	if outline_col > 15 then
 		outline_col = 0
 	end
@@ -915,32 +915,32 @@ function update_order()
 end
 
 
-function add_ing(_x,_y,_type)
-	local _ing = {}
-	_ing.x = _x
-	_ing.y = _y
-	_ing.tpe = _type
+function add_ing(x,y,_type)
+	local ing = {}
+	ing.x = x
+	ing.y = y
+	ing.tpe = _type
 	-- used to remove the old ings on contact with new tray
 	-- it's like a magical trick
-	_ing.mage = _maxage
+	ing.mage = _maxage
 	-- age starts at zero, goes to maxage
-	_ing.age = 0
+	ing.age = 0
 
 	-- we're adding an ingredient to ingredient array
-	add(ing_list,_p)
+	add(ing_list,ing)
 end
 
 function update_ing()
-	local _ing
+	local ing
 	-- iterating on each ingrediant in the ingredient list
 	for i = #ing_list,1,-1 do
-		_ing = ing_list[i]
+		ing = ing_list[i]
 		-- aging of the ing
-		_ing.age += 1
+		ing.age += 1
 		-- moving the ing
 		-- debug values
-		_ing.x += 1
-		_ing.y += 1
+		ing.x += 1
+		ing.y += 1
 	end
 end
 
