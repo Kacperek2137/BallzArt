@@ -1,6 +1,7 @@
 function _init()
 	--debug
 	collision = false
+	debug = "AAA"
 
 
 	--debug outline
@@ -819,6 +820,8 @@ function drawbackground()
 	--print(order_time_procentage,60,70,10)
 
 
+
+	print(debug,30,30,1)
 end
 
 
@@ -887,6 +890,9 @@ function new_order()
 
 	ing_5 = flr(ing_to_dispose)
 	ing_to_dispose -= ing_2
+
+
+	-- fixing the bug with 0 0 0 0 0
 end
 
 function update_order()
@@ -1007,6 +1013,27 @@ function update_ing()
 
 		-- hitbox check
 		if ball_box(ing.x,ing.y,8,8) then
+			-- changing the values of ing types on the UI
+			if ing.tpe == 1 then
+				debug = "HIT ONE"
+				ing_1 -= 1
+			end
+
+			if ing.tpe == 2 then
+				ing_1 -= 1
+			end
+
+			if ing.tpe == 3 then
+				ing_1 -= 1
+			end
+
+			if ing.tpe == 4 then
+				ing_1 -= 1
+			end
+
+			if ing.tpe == 5 then
+				ing_1 -= 1
+			end
 			del(ing_list,ing)
 		end
 	end
