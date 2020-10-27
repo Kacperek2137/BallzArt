@@ -1,7 +1,7 @@
 function _init()
 	--debug
 	collision = false
-	debug = "AAA"
+	debugnum = 10
 
 
 	--debug outline
@@ -143,8 +143,8 @@ function _update60()
 	if btnp(4) then
 		outline_col += 1
 		-- debug
-		add_ing(1,3,rnd(4) + 1,"TOP")
-		add_ing(110,101,rnd(4) + 1,"BOTTOM")
+		add_ing(1,3,flr(rnd(4) + 1),"TOP")
+		add_ing(110,101,flr(rnd(4) + 1),"BOTTOM")
 		if outline_col > 15 then
 			outline_col = 0
 		end
@@ -620,7 +620,6 @@ function _draw()
 
 
 
-	-- debug
 
 	-- ing system draw
 	draw_ing()
@@ -1014,25 +1013,25 @@ function update_ing()
 		-- hitbox check
 		if ball_box(ing.x,ing.y,8,8) then
 			-- changing the values of ing types on the UI
-			if ing.tpe == 1 then
-				debug = "HIT ONE"
+			debugnum += 1
+			if flr(ing.tpe) == 1 then
 				ing_1 -= 1
 			end
 
-			if ing.tpe == 2 then
-				ing_1 -= 1
+			if flr(ing.tpe) == 2 then
+				ing_2 -= 1
 			end
 
-			if ing.tpe == 3 then
-				ing_1 -= 1
+			if flr(ing.tpe) == 3 then
+				ing_3 -= 1
 			end
 
-			if ing.tpe == 4 then
-				ing_1 -= 1
+			if flr(ing.tpe) == 4 then
+				ing_4 -= 1
 			end
 
-			if ing.tpe == 5 then
-				ing_1 -= 1
+			if flr(ing.tpe) == 5 then
+				ing_5 -= 1
 			end
 			del(ing_list,ing)
 		end
