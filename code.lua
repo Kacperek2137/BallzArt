@@ -126,7 +126,14 @@ function _init()
 	-- ingredient control setup
 	ing_list = {}
 
+	-- order new ing adding
+	tic = 0
 
+	-- player score var
+	player_score = 0
+
+	-- order is starting now debug
+	new_order()
 
 end
 
@@ -143,8 +150,6 @@ function _update60()
 	if btnp(4) then
 		outline_col += 1
 		-- debug
-		add_ing(1,3,flr(rnd(4) + 1),"TOP")
-		add_ing(110,101,flr(rnd(4) + 1),"BOTTOM")
 		if outline_col > 15 then
 			outline_col = 0
 		end
@@ -455,43 +460,6 @@ function _update60()
 
 
 
-	-- target collision
-	if ball_box(target_x, target_y, target_radius, target_radius) then
-		sfx(1)
-		--target_x = rnd(100)
-		target_x = 5 + rnd (100)
-		target_y = 6
-		target_dx = target_dm
-		target_dy = 0
-		score += 1
-
-
-	end
-
-
-
-	-- sectarget collision
-	if ball_box(sectarget_x, sectarget_y, sectarget_radius, sectarget_radius) then
-		sfx(1)
-		--target_x = rnd(100)
-		sectarget_x = 5 + rnd (100)
-		sectarget_y = 6
-		sectarget_dx = sectarget_dm
-		sectarget_dy = 0
-		score += 1
-
-	end
-	-- badtarget collision
-	if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
-		sfx(1)
-		badtarget_x =  5
-		badtarget_y = 5 + rnd(100)
-		badtarget_dx = 0
-		badtarget_dy = -badtarget_dm
-		score -= 1
-
-
-	end
 
 	if pad_position == "horizontal" then
 
@@ -542,9 +510,16 @@ function _update60()
 	-- ing system update
 	update_ing()
 
+	-- if we've got order rolling
+	spawnnew_ing()
 
+	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
+		player_score += 250
+		new_order()
+	end
 
 end
+
 
 
 
@@ -812,7 +787,7 @@ function drawbackground()
 
 
 	-- score bar
-	print(9999,108,116,7)
+	print(player_score,108,116,7)
 
 	--print(order_time,60,80,8)
 	--print(frame,60,90,9)
@@ -887,8 +862,16 @@ function new_order()
 	ing_to_dispose -= ing_4
 
 
-	ing_5 = flr(ing_to_dispose)
-	ing_to_dispose -= ing_2
+	-- temporary disabled due to UI
+	--ing_5 = flr(ing_to_dispose)
+	--ing_to_dispose -= ing_2
+
+	-- 0 0 0 0 0 ing bug fix
+	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
+		ing_1 = 1
+		ing_3 = 2
+
+	end
 
 
 	-- fixing the bug with 0 0 0 0 0
@@ -927,6 +910,9 @@ function update_order()
 	if order_time_procentage == 0 then
 		bar_col = 7
 	end
+
+	-- the order is completed
+	
 end
 
 
@@ -1016,22 +1002,27 @@ function update_ing()
 			debugnum += 1
 			if flr(ing.tpe) == 1 then
 				ing_1 -= 1
+				ing_1 = mid(0,ing_1,100)
 			end
 
 			if flr(ing.tpe) == 2 then
 				ing_2 -= 1
+				ing_2 = mid(0,ing_2,100)
 			end
 
 			if flr(ing.tpe) == 3 then
 				ing_3 -= 1
+				ing_3 = mid(0,ing_3,100)
 			end
 
 			if flr(ing.tpe) == 4 then
 				ing_4 -= 1
+				ing_4 = mid(0,ing_4,100)
 			end
 
 			if flr(ing.tpe) == 5 then
 				ing_5 -= 1
+				ing_5 = mid(0,ing_5,100)
 			end
 			del(ing_list,ing)
 		end
@@ -1045,5 +1036,19 @@ function draw_ing()
 	for i = 1,#ing_list do
 		ing = ing_list[i]
 		spr(ing.tpe,ing.x,ing.y)
+	end
+end
+
+function spawnnew_ing()
+	tic += 1
+
+	if tic > 120 then
+
+		if order_time > 0 then
+
+			add_ing(1,3,flr(rnd(4) + 1),"TOP")
+			add_ing(115,101,flr(rnd(4) + 1),"BOTTOM")
+			tic = 0
+		end
 	end
 end
