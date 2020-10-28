@@ -1,3 +1,6 @@
+pico-8 cartridge // http://www.pico-8.com
+version 29
+__lua__
 function _init()
 	--debug
 	collision = false
@@ -126,14 +129,7 @@ function _init()
 	-- ingredient control setup
 	ing_list = {}
 
-	-- order new ing adding
-	tic = 0
 
-	-- player score var
-	player_score = 0
-
-	-- order is starting now debug
-	new_order()
 
 end
 
@@ -150,6 +146,8 @@ function _update60()
 	if btnp(4) then
 		outline_col += 1
 		-- debug
+		add_ing(1,3,flr(rnd(4) + 1),"TOP")
+		add_ing(110,101,flr(rnd(4) + 1),"BOTTOM")
 		if outline_col > 15 then
 			outline_col = 0
 		end
@@ -274,22 +272,25 @@ function _update60()
 	if ball_x > 127 - ball_radius then
 		ball_dx = -ball_dm
 		ball_dy = 1 * sign(ball_dy)
-
+		sfx(1)
 	end
 
 	if ball_x < 0 + ball_radius then
 		ball_dx = ball_dm
 		ball_dy = 1 * sign(ball_dy)
+		sfx(1)
 	end
 
 	if ball_y > 111 - ball_radius then
 		ball_dy = -ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		sfx(1)
 	end
 
 	if ball_y < 0 + ball_radius then
 		ball_dy = ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		sfx(1)
 	end
 
 	-- horizontal
@@ -460,6 +461,43 @@ function _update60()
 
 
 
+	-- target collision
+	if ball_box(target_x, target_y, target_radius, target_radius) then
+		sfx(3)
+		--target_x = rnd(100)
+		target_x = 5 + rnd (100)
+		target_y = 6
+		target_dx = target_dm
+		target_dy = 0
+		score += 1
+
+
+	end
+
+
+
+	-- sectarget collision
+	if ball_box(sectarget_x, sectarget_y, sectarget_radius, sectarget_radius) then
+		sfx(2)
+		--target_x = rnd(100)
+		sectarget_x = 5 + rnd (100)
+		sectarget_y = 6
+		sectarget_dx = sectarget_dm
+		sectarget_dy = 0
+		score += 1
+
+	end
+	-- badtarget collision
+	if ball_box(badtarget_x, badtarget_y, badtarget_radius, badtarget_radius) then
+		sfx(2)
+		badtarget_x =  5
+		badtarget_y = 5 + rnd(100)
+		badtarget_dx = 0
+		badtarget_dy = -badtarget_dm
+		score -= 1
+
+
+	end
 
 	if pad_position == "horizontal" then
 
@@ -467,13 +505,13 @@ function _update60()
 		-- left pad check
 		if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
 			ball_x -= 4
-
+			
 		end
 
 		-- right pad check
 		if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
 			ball_x += 4
-
+			
 		end
 
 
@@ -510,16 +548,9 @@ function _update60()
 	-- ing system update
 	update_ing()
 
-	-- if we've got order rolling
-	spawnnew_ing()
 
-	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
-		player_score += 250
-		new_order()
-	end
 
 end
-
 
 
 
@@ -787,7 +818,7 @@ function drawbackground()
 
 
 	-- score bar
-	print(player_score,108,116,7)
+	print(9999,108,116,7)
 
 	--print(order_time,60,80,8)
 	--print(frame,60,90,9)
@@ -823,7 +854,7 @@ function new_order()
 	order_time = 60
 
 	total_orders += 1
-
+	sfx(6)
 	-- bar green
 	bar_col = 11
 
@@ -862,16 +893,8 @@ function new_order()
 	ing_to_dispose -= ing_4
 
 
-	-- temporary disabled due to UI
-	--ing_5 = flr(ing_to_dispose)
-	--ing_to_dispose -= ing_2
-
-	-- 0 0 0 0 0 ing bug fix
-	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
-		ing_1 = 1
-		ing_3 = 2
-
-	end
+	ing_5 = flr(ing_to_dispose)
+	ing_to_dispose -= ing_2
 
 
 	-- fixing the bug with 0 0 0 0 0
@@ -910,9 +933,6 @@ function update_order()
 	if order_time_procentage == 0 then
 		bar_col = 7
 	end
-
-	-- the order is completed
-	
 end
 
 
@@ -1002,27 +1022,22 @@ function update_ing()
 			debugnum += 1
 			if flr(ing.tpe) == 1 then
 				ing_1 -= 1
-				ing_1 = mid(0,ing_1,100)
 			end
 
 			if flr(ing.tpe) == 2 then
 				ing_2 -= 1
-				ing_2 = mid(0,ing_2,100)
 			end
 
 			if flr(ing.tpe) == 3 then
 				ing_3 -= 1
-				ing_3 = mid(0,ing_3,100)
 			end
 
 			if flr(ing.tpe) == 4 then
 				ing_4 -= 1
-				ing_4 = mid(0,ing_4,100)
 			end
 
 			if flr(ing.tpe) == 5 then
 				ing_5 -= 1
-				ing_5 = mid(0,ing_5,100)
 			end
 			del(ing_list,ing)
 		end
@@ -1039,16 +1054,13 @@ function draw_ing()
 	end
 end
 
-function spawnnew_ing()
-	tic += 1
 
-	if tic > 120 then
 
-		if order_time > 0 then
+__sfx__
+0001000024050000002305000000220502205000000200502005022050270501f0502105022050210501705017050240501f0501805020050250501d0501a050260502c050210501905025050000000000000000
+0003000000000000000000000000000000000009050000000a0500905008050080500805030050380503905039050380502d0501e0500f0500e0500e0500e0500e0500f050000000000000000000000000000000
+__music__
+00 41424344
+01 01424344
+02 41004344
 
-			add_ing(1,3,flr(rnd(4) + 1),"TOP")
-			add_ing(115,101,flr(rnd(4) + 1),"BOTTOM")
-			tic = 0
-		end
-	end
-end
