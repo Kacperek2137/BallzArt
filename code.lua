@@ -135,6 +135,8 @@ function _init()
 	-- order is starting now debug
 	new_order()
 
+	music(4)
+
 end
 
 function _update60()
@@ -356,7 +358,7 @@ function _update60()
 		pad_y += pad_dy
 
 	end
-	pad_color = 7
+	pad_color = 2
 	-- check if ball hit pad
 
 	-- pad horizontal collision
@@ -723,18 +725,35 @@ function drawbackground()
 	-- background
 	rectfill(0,0,128,128,0)
 
+	drawsmallbox()
 
 	-- big box
+	
 
-	rect(0,0,127,111,line_col)
+	-- sprite testing
+	-- top left corner
+	spr(6,0,0,2,2)
+	-- top right corner
+	spr(8,112,0,2,2)
+	-- left wall
+	drawleftwall()
+
+	-- bottom left corner
+	spr(38,0,96,2,2)
+
+
+	-- outline of big box
+	--rect(0,0,127,111,line_col)
 
 
 	-- small box
 	-- pattern test
-	fillp(0b1000010000100001)
-	rectfill(13,13,114,98,4)
-	fillp()
+	-- fillp(0b1000010000100001)
+	-- rectfill(13,13,114,98,4)
+	-- fillp()
 
+
+	-- pattern inside small box
 	rect(13,13,114,98,4)
 
 
@@ -801,8 +820,8 @@ end
 
 function drawserveboxes()
 	-- serve boxes
-	rectfill(0,0,12,12,line_col)
-	rectfill(115,99,127,111,line_col)
+	-- rectfill(0,0,12,12,line_col)
+	 --rectfill(115,99,127,111,line_col)
 end
 
 -- debug
@@ -1051,4 +1070,33 @@ function spawnnew_ing()
 			tic = 0
 		end
 	end
+end
+
+function drawsmallbox()
+	local n = 0
+	local row = 0
+	-- for each row
+	for p=1,11 do
+		n = 0
+
+		-- filling the row
+		for i=1,13 do
+			spr(33,13 + n * 8,13 + row * 8)
+			n += 1
+
+		end
+		row +=1 
+	end
+
+end
+
+function drawleftwall()
+	local n = 0
+	for i=1,6 do
+
+		spr(42,0,16 + 16 * n,2,2)
+		n += 1
+	end
+
+
 end
