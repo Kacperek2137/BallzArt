@@ -46,6 +46,12 @@ function _init()
 
 	ball_ang = 0
 
+	ball_col = 9
+
+	-- freeze
+	freezetimer = 0
+	ball_frosted = false
+	frosted_timer = 0
 	-- target setup
 	target_x = rnd(100)
 	target_y = 6
@@ -149,8 +155,28 @@ function _update60()
 	debug = ''
 	-- if x is pressed
 	if btnp(5) then
-		new_order()
+
+		ball_frosted = true
+		frosted_timer = 100
+		-- frost SFX
+		sfx(27)
 	end
+
+	if ball_frosted == true then
+		frosted_timer -= 1
+		ball_col = 12
+		outline_col = 12
+		
+		if frosted_timer < 0 then
+			ball_frosted = false
+			ball_col = 9
+			outline_col = 8
+			-- unfrost sfx
+			sfx(28)
+		end
+	end
+
+
 
 	-- debug
 	if btnp(4) then
@@ -272,9 +298,15 @@ function _update60()
 
 	-- ball movement
 
-	ball_x += ball_dx
-	ball_y += ball_dy
+	-- ball frosting 
+	if ball_frosted == false then
+		ball_x += ball_dx
+		ball_y += ball_dy
+	else
 
+		ball_x += 0
+		ball_y += 0
+	end
 	-- ball wall bouncing
 	-- radius is added or removed for better collision detection
 	if ball_x > 127 - ball_radius then
@@ -524,6 +556,9 @@ function _update60()
 		new_order()
 	end
 
+
+
+
 end
 
 
@@ -590,7 +625,7 @@ function _draw()
 	-- ball outline
 	circfill(ball_x,ball_y,ball_radius + 1, outline_col)
 	--ball
-	circfill(ball_x,ball_y,ball_radius, 9)
+	circfill(ball_x,ball_y,ball_radius, ball_col)
 
 
 
@@ -607,6 +642,7 @@ function _draw()
 
 	drawserveboxes()
 
+	--debug
 
 
 end
@@ -1070,7 +1106,8 @@ end
 function spawnnew_ing()
 	tic += 1
 
-	if tic > 120 then
+	-- previously 120
+	if tic > 180 then
 
 		if order_time > 0 then
 
