@@ -724,6 +724,10 @@ function spawntrail(_x, _y)
 	addpart(_x + _ox,_y + _oy,0,20 + rnd(15), 9, 10)
 end
 
+function spawnboom(_x,_y)
+	addpart(_x,_y,8,60,8,0)
+end
+
 function updateparts()
 	local _p
 	for i=#part,1, -1 do
@@ -749,6 +753,14 @@ function drawparts()
 			pset(_p.x,_p.y,_p.col)
 		else
 		end
+
+		-- if bomb
+		if _p.tpe == 8 then
+			circfill(_p.x,_p.y,sin(_p.age) * 10,_p.col)
+			pset(_p.x,_p.y,_p.col)
+		end
+		circfill(_p.x,_p.y,sin(_p.age) * 10,_p.col)
+		pset(_p.x,_p.y,_p.col)
 	end
 end
 
@@ -802,7 +814,7 @@ function drawbackground()
 	spr(38,0,96,2,2)
 
 	-- bottom right corner
-	spr(40,112,96,2,2)
+	spr(6,112,96,2,2,true,true)
 
 
 	-- wall joining the corners
@@ -1092,6 +1104,7 @@ function update_ing()
 				sfx(29)
 				order_time -= 10
 				shake+=1
+				spawnboom(ing.x,ing.y)
 			end
 
 
@@ -1237,5 +1250,4 @@ function doshake()
  -- finally, fade out the shake
  -- reset to 0 when very low
  shake = shake*0.95
- if (shake<0.05) shake=0
-end
+ if (shake<0.05) shake=0 end
