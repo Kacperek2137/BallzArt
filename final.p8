@@ -22,7 +22,7 @@ function _init()
 	pad_dx = 0
 	pad_dy = 0
 	pad_position = "horizontal"
-	pad_width = 20
+	pad_width = 30
 	pad_height = 3
 	pad_color = 3
 
@@ -30,6 +30,7 @@ function _init()
 	pad_hitbox_y = 0
 	pad_hitbox_width = 0
 	pad_hitbox_height= 0
+	pad_speed = 5
 
 
 	-- bouncebox left setup
@@ -117,6 +118,9 @@ function _init()
 
 	-- how many total ings are on the start
 	start_ing_to_dispose = 0
+
+	-- ing speed
+	ing_speed = 0.5
 
 
 	-- order system update
@@ -302,14 +306,14 @@ function _update60()
 	-- only one button can be held at a time
 	if (btn(0)) and not (btn(2)) and not (btn(3)) then
 		--pad_x -= 3
-		pad_dx = -3
+		pad_dx = - pad_speed
 		butpress = true
 		pad_position = "horizontal"
 	end
 
 	if (btn(1)) and not (btn(2)) and not (btn(3))then
 		--pad_x += 3
-		pad_dx = 3
+		pad_dx = pad_speed
 		butpress = true
 		pad_position = "horizontal"
 	end
@@ -318,14 +322,14 @@ function _update60()
 
 	if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
 		--pad_y -= 3
-		pad_dy = -3
+		pad_dy = - pad_speed
 		butpress = true
 		pad_position = "vertical"
 	end
 
 	if (btn(3)) and not (btn(0)) then
 		--pad_y += 3
-		pad_dy =3
+		pad_dy = pad_speed
 		butpress = true
 		pad_position = "vertical"
 	end
@@ -348,8 +352,8 @@ function _update60()
 
 
 	--pad clamp border
-	pad_x = mid(7,pad_x,100)
-	pad_y = mid(17,pad_y,110)
+	pad_x = mid(16,pad_x, 91)
+	pad_y = mid(26,pad_y,85)
 
 	if pad_position == "horizontal" then
 
@@ -981,10 +985,10 @@ function update_ing()
 		if ing.tray == "BOTTOM" then
 			-- bottom right corner hit
 			if ing.x > 3 and ing.y > 100 then
-				ing.x -= 0.5
+				ing.x -= ing_speed
 			end
 			if ing.x <= 3 and ing.y > 3 then
-				ing.y -= 0.5
+				ing.y -= ing_speed
 			end
 
 			if ing.y == 0 then
@@ -1001,20 +1005,18 @@ function update_ing()
 
 			-- left upper corner hit
 			if ing.x < 117 and ing.y < 101 then
-				ing_dx = 0.5
+				ing_dx = ing_speed
 				ing_dy = 0
 			end
 
 			-- top right corner hit
 			if ing.x >= 117 and ing.y < 101 then
 				ing_dx = 0
-				ing_dy = 0.5
+				ing_dy = ing_speed
 			end
 
 			-- bottom right corner hit
 			if ing.x >= 117 and ing.y >= 101 then
-				ing_dx = -0.5
-				ing_dy = 0
 				del(ing_list,ing)
 			end
 
