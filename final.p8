@@ -988,6 +988,10 @@ function update_ing()
 				del(ing_list,ing)
 			end
 
+			-- top left corner hit
+			if ing.x <= 117 and ing.y <= 5 then
+				del(ing_list,ing)
+			end
 		end
 
 		if ing.tray == "TOP" then
