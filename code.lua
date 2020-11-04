@@ -1123,15 +1123,23 @@ function spawnnew_ing()
 	tic += 1
 
 	-- previously 120
+	-- testing with 180
 	if tic > 180 then
+
+		--local top_type = flr(rnd(5) + 1)
+		--local bottom_type = flr(rnd(5) + 1)
+
 
 		if order_time > 0 then
 
-			add_ing(1,3,flr(rnd(4) + 1),"TOP")
-			add_ing(115,101,flr(rnd(4) + 1),"BOTTOM")
+			add_ing(1,3,flr(rnd(5) + 1),"TOP")
+			add_ing(115,101,flr(rnd(5) + 1),"BOTTOM")
+			--add_ing(1,3,top_type,"TOP")
+			--add_ing(115,101,bottom_type,"BOTTOM")
 			tic = 0
 			--sfx of new ing added
 			sfx(7)
+			-- bomb comming
 		end
 	end
 end
