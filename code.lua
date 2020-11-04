@@ -145,7 +145,10 @@ function _init()
 	-- order is starting now debug
 	new_order()
 
-	music(4)
+	-- game start sfx
+	sfx(26)
+
+	music(4,5000)
 
 end
 
@@ -312,22 +315,30 @@ function _update60()
 	if ball_x > 127 - ball_radius then
 		ball_dx = -ball_dm
 		ball_dy = 1 * sign(ball_dy)
+		-- wall collision sfx
+		sfx(1)
 
 	end
 
 	if ball_x < 0 + ball_radius then
 		ball_dx = ball_dm
 		ball_dy = 1 * sign(ball_dy)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	if ball_y > 111 - ball_radius then
 		ball_dy = -ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	if ball_y < 0 + ball_radius then
 		ball_dy = ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	-- horizontal
@@ -554,6 +565,8 @@ function _update60()
 	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
 		player_score += 250
 		new_order()
+		--new order sfx
+		sfx(6)
 	end
 
 
@@ -1064,6 +1077,9 @@ function update_ing()
 		if ball_box(ing.x,ing.y,8,8) then
 			-- changing the values of ing types on the UI
 			debugnum += 1
+
+			--sfx of good ing
+			sfx(3)
 			if flr(ing.tpe) == 1 then
 				ing_1 -= 1
 				ing_1 = mid(0,ing_1,100)
@@ -1114,6 +1130,8 @@ function spawnnew_ing()
 			add_ing(1,3,flr(rnd(4) + 1),"TOP")
 			add_ing(115,101,flr(rnd(4) + 1),"BOTTOM")
 			tic = 0
+			--sfx of new ing added
+			sfx(7)
 		end
 	end
 end
