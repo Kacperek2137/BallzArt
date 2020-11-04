@@ -142,6 +142,10 @@ function _init()
 	-- player score var
 	player_score = 0
 
+
+	--screen shake vars
+	shake = 0
+
 	-- order is starting now debug
 	new_order()
 
@@ -150,9 +154,12 @@ function _init()
 
 	music(4,5000)
 
+
+
 end
 
 function _update60()
+
 
 	--debug
 	debug = ''
@@ -585,6 +592,8 @@ end
 function _draw()
 
 	cls()
+
+	doshake()
 
 	-- background from mockup
 	drawbackground()
@@ -1076,7 +1085,15 @@ function update_ing()
 		-- hitbox check
 		if ball_box(ing.x,ing.y,8,8) then
 			-- changing the values of ing types on the UI
-			debugnum += 1
+
+			-- if bomb
+			if ing.tpe == 5 then
+				--sfx of explosion
+				sfx(29)
+				order_time -= 10
+				shake+=1
+			end
+
 
 			--sfx of good ing
 			sfx(3)
@@ -1196,3 +1213,29 @@ function drawwall()
 	end
 end
 
+function doshake()
+ -- this function does the
+ -- shaking
+ -- first we generate two
+ -- random numbers between
+ -- -16 and +16
+ local shakex=16-rnd(32)
+ local shakey=16-rnd(32)
+
+ -- then we apply the shake
+ -- strength
+ shakex*=shake
+ shakey*=shake
+ 
+ -- then we move the camera
+ -- this means that everything
+ -- you draw on the screen
+ -- afterwards will be shifted
+ -- by that many pixels
+ camera(shakex,shakey)
+ 
+ -- finally, fade out the shake
+ -- reset to 0 when very low
+ shake = shake*0.95
+ if (shake<0.05) shake=0
+end
