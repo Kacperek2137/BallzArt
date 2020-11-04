@@ -19,7 +19,7 @@ function _init()
 	pad_dx = 0
 	pad_dy = 0
 	pad_position = "horizontal"
-	pad_width = 20
+	pad_width = 30
 	pad_height = 3
 	pad_color = 3
 
@@ -27,6 +27,7 @@ function _init()
 	pad_hitbox_y = 0
 	pad_hitbox_width = 0
 	pad_hitbox_height= 0
+	pad_speed = 5
 
 
 	-- bouncebox left setup
@@ -45,6 +46,12 @@ function _init()
 
 	ball_ang = 0
 
+	ball_col = 9
+
+	-- freeze
+	freezetimer = 0
+	ball_frosted = false
+	frosted_timer = 0
 	-- target setup
 	target_x = rnd(100)
 	target_y = 6
@@ -115,6 +122,9 @@ function _init()
 	-- how many total ings are on the start
 	start_ing_to_dispose = 0
 
+	-- ing speed
+	ing_speed = 0.5
+
 
 	-- order system update
 	frame = 0
@@ -132,19 +142,51 @@ function _init()
 	-- player score var
 	player_score = 0
 
+
+	--screen shake vars
+	shake = 0
+
 	-- order is starting now debug
 	new_order()
+
+	-- game start sfx
+	sfx(26)
+
+	music(4,5000)
+
+
 
 end
 
 function _update60()
 
+
 	--debug
 	debug = ''
 	-- if x is pressed
 	if btnp(5) then
-		new_order()
+
+		ball_frosted = true
+		frosted_timer = 100
+		-- frost SFX
+		sfx(27)
 	end
+
+	if ball_frosted == true then
+		frosted_timer -= 1
+		ball_col = 12
+		outline_col = 12
+		
+		if frosted_timer < 0 then
+			ball_frosted = false
+			ball_col = 9
+			outline_col = 8
+			-- unfrost sfx
+			sfx(28)
+		end
+	end
+
+
 
 	-- debug
 	if btnp(4) then
@@ -266,30 +308,44 @@ function _update60()
 
 	-- ball movement
 
-	ball_x += ball_dx
-	ball_y += ball_dy
+	-- ball frosting 
+	if ball_frosted == false then
+		ball_x += ball_dx
+		ball_y += ball_dy
+	else
 
+		ball_x += 0
+		ball_y += 0
+	end
 	-- ball wall bouncing
 	-- radius is added or removed for better collision detection
 	if ball_x > 127 - ball_radius then
 		ball_dx = -ball_dm
 		ball_dy = 1 * sign(ball_dy)
+		-- wall collision sfx
+		sfx(1)
 
 	end
 
 	if ball_x < 0 + ball_radius then
 		ball_dx = ball_dm
 		ball_dy = 1 * sign(ball_dy)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	if ball_y > 111 - ball_radius then
 		ball_dy = -ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	if ball_y < 0 + ball_radius then
 		ball_dy = ball_dm
 		ball_dx = 1 * sign(ball_dx)
+		-- wall collision sfx
+		sfx(1)
 	end
 
 	-- horizontal
@@ -297,14 +353,14 @@ function _update60()
 	-- only one button can be held at a time
 	if (btn(0)) and not (btn(2)) and not (btn(3)) then
 		--pad_x -= 3
-		pad_dx = -3
+		pad_dx = - pad_speed
 		butpress = true
 		pad_position = "horizontal"
 	end
 
 	if (btn(1)) and not (btn(2)) and not (btn(3))then
 		--pad_x += 3
-		pad_dx = 3
+		pad_dx = pad_speed
 		butpress = true
 		pad_position = "horizontal"
 	end
@@ -313,14 +369,14 @@ function _update60()
 
 	if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
 		--pad_y -= 3
-		pad_dy = -3
+		pad_dy = - pad_speed
 		butpress = true
 		pad_position = "vertical"
 	end
 
 	if (btn(3)) and not (btn(0)) then
 		--pad_y += 3
-		pad_dy =3
+		pad_dy = pad_speed
 		butpress = true
 		pad_position = "vertical"
 	end
@@ -343,8 +399,8 @@ function _update60()
 
 
 	--pad clamp border
-	pad_x = mid(7,pad_x,100)
-	pad_y = mid(17,pad_y,110)
+	pad_x = mid(16,pad_x, 91)
+	pad_y = mid(26,pad_y,85)
 
 	if pad_position == "horizontal" then
 
@@ -356,7 +412,7 @@ function _update60()
 		pad_y += pad_dy
 
 	end
-	pad_color = 7
+	pad_color = 2
 	-- check if ball hit pad
 
 	-- pad horizontal collision
@@ -516,7 +572,12 @@ function _update60()
 	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
 		player_score += 250
 		new_order()
+		--new order sfx
+		sfx(6)
 	end
+
+
+
 
 end
 
@@ -531,6 +592,8 @@ end
 function _draw()
 
 	cls()
+
+	doshake()
 
 	-- background from mockup
 	drawbackground()
@@ -584,7 +647,7 @@ function _draw()
 	-- ball outline
 	circfill(ball_x,ball_y,ball_radius + 1, outline_col)
 	--ball
-	circfill(ball_x,ball_y,ball_radius, 9)
+	circfill(ball_x,ball_y,ball_radius, ball_col)
 
 
 
@@ -601,6 +664,7 @@ function _draw()
 
 	drawserveboxes()
 
+	--debug
 
 
 end
@@ -723,18 +787,38 @@ function drawbackground()
 	-- background
 	rectfill(0,0,128,128,0)
 
+	drawsmallbox()
 
-	-- big box
+	-- big box - ramka
+	
 
-	rect(0,0,127,111,line_col)
+	-- top left corner
+	spr(6,0,0,2,2)
+
+	-- top right corner
+	spr(8,112,0,2,2)
+
+	-- bottom left corner
+	spr(38,0,96,2,2)
+
+	-- bottom right corner
+	spr(40,112,96,2,2)
+
+
+	-- wall joining the corners
+	drawwall()
+	-- outline of big box
+	--rect(0,0,127,111,line_col)
 
 
 	-- small box
 	-- pattern test
-	fillp(0b1000010000100001)
-	rectfill(13,13,114,98,4)
-	fillp()
+	-- fillp(0b1000010000100001)
+	-- rectfill(13,13,114,98,4)
+	-- fillp()
 
+
+	-- pattern inside small box
 	rect(13,13,114,98,4)
 
 
@@ -801,8 +885,8 @@ end
 
 function drawserveboxes()
 	-- serve boxes
-	rectfill(0,0,12,12,line_col)
-	rectfill(115,99,127,111,line_col)
+	-- rectfill(0,0,12,12,line_col)
+	 --rectfill(115,99,127,111,line_col)
 end
 
 -- debug
@@ -956,36 +1040,38 @@ function update_ing()
 		if ing.tray == "BOTTOM" then
 			-- bottom right corner hit
 			if ing.x > 3 and ing.y > 100 then
-				ing.x -= 0.5
+				ing.x -= ing_speed
 			end
 			if ing.x <= 3 and ing.y > 3 then
-				ing.y -= 0.5
+				ing.y -= ing_speed
 			end
 
 			if ing.y == 0 then
 				del(ing_list,ing)
 			end
 
+			-- top left corner hit
+			if ing.x <= 117 and ing.y <= 5 then
+				del(ing_list,ing)
+			end
 		end
 
 		if ing.tray == "TOP" then
 
 			-- left upper corner hit
 			if ing.x < 117 and ing.y < 101 then
-				ing_dx = 0.5
+				ing_dx = ing_speed
 				ing_dy = 0
 			end
 
 			-- top right corner hit
 			if ing.x >= 117 and ing.y < 101 then
 				ing_dx = 0
-				ing_dy = 0.5
+				ing_dy = ing_speed
 			end
 
 			-- bottom right corner hit
 			if ing.x >= 117 and ing.y >= 101 then
-				ing_dx = -0.5
-				ing_dy = 0
 				del(ing_list,ing)
 			end
 
@@ -999,7 +1085,18 @@ function update_ing()
 		-- hitbox check
 		if ball_box(ing.x,ing.y,8,8) then
 			-- changing the values of ing types on the UI
-			debugnum += 1
+
+			-- if bomb
+			if ing.tpe == 5 then
+				--sfx of explosion
+				sfx(29)
+				order_time -= 10
+				shake+=1
+			end
+
+
+			--sfx of good ing
+			sfx(3)
 			if flr(ing.tpe) == 1 then
 				ing_1 -= 1
 				ing_1 = mid(0,ing_1,100)
@@ -1042,13 +1139,103 @@ end
 function spawnnew_ing()
 	tic += 1
 
-	if tic > 120 then
+	-- previously 120
+	-- testing with 180
+	if tic > 180 then
+
+		--local top_type = flr(rnd(5) + 1)
+		--local bottom_type = flr(rnd(5) + 1)
+
 
 		if order_time > 0 then
 
-			add_ing(1,3,flr(rnd(4) + 1),"TOP")
-			add_ing(115,101,flr(rnd(4) + 1),"BOTTOM")
+			add_ing(1,3,flr(rnd(5) + 1),"TOP")
+			add_ing(115,101,flr(rnd(5) + 1),"BOTTOM")
+			--add_ing(1,3,top_type,"TOP")
+			--add_ing(115,101,bottom_type,"BOTTOM")
 			tic = 0
+			--sfx of new ing added
+			sfx(7)
+			-- bomb comming
 		end
 	end
+end
+
+function drawsmallbox()
+	local n = 0
+	local row = 0
+	-- for each row
+	for p=1,11 do
+		n = 0
+
+		-- filling the row
+		for i=1,13 do
+			spr(33,13 + n * 8,13 + row * 8)
+			n += 1
+
+		end
+		row +=1 
+	end
+
+end
+
+function drawwall()
+	local n = 0
+	-- left wall
+	for i=1,5 do
+
+		spr(42,0,16 + 16 * n,2,2)
+		n += 1
+	end
+
+	-- right wall
+	n = 0
+	for i=1,5 do
+
+		spr(44,112,16 + 16 * n,2,2)
+		n += 1
+	end
+
+	-- top wall
+	n = 0
+	for i=1,6 do
+
+		spr(10,16 + 16* n,0,2,2)
+		n += 1
+	end
+
+	-- bottom wall
+	n = 0
+	for i=1,6 do
+
+		spr(12,16 + 16* n,96,2,2)
+		n += 1
+	end
+end
+
+function doshake()
+ -- this function does the
+ -- shaking
+ -- first we generate two
+ -- random numbers between
+ -- -16 and +16
+ local shakex=16-rnd(32)
+ local shakey=16-rnd(32)
+
+ -- then we apply the shake
+ -- strength
+ shakex*=shake
+ shakey*=shake
+ 
+ -- then we move the camera
+ -- this means that everything
+ -- you draw on the screen
+ -- afterwards will be shifted
+ -- by that many pixels
+ camera(shakex,shakey)
+ 
+ -- finally, fade out the shake
+ -- reset to 0 when very low
+ shake = shake*0.95
+ if (shake<0.05) shake=0
 end
