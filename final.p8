@@ -730,21 +730,24 @@ function drawbackground()
 
 	drawsmallbox()
 
-	-- big box
+	-- big box - ramka
 	
 
-	-- sprite testing
 	-- top left corner
 	spr(6,0,0,2,2)
+
 	-- top right corner
 	spr(8,112,0,2,2)
-	-- left wall
-	drawleftwall()
 
 	-- bottom left corner
 	spr(38,0,96,2,2)
 
+	-- bottom right corner
+	spr(40,112,96,2,2)
 
+
+	-- wall joining the corners
+	drawwall()
 	-- outline of big box
 	--rect(0,0,127,111,line_col)
 
@@ -1097,16 +1100,40 @@ function drawsmallbox()
 
 end
 
-function drawleftwall()
+function drawwall()
 	local n = 0
-	for i=1,6 do
+	-- left wall
+	for i=1,5 do
 
 		spr(42,0,16 + 16 * n,2,2)
 		n += 1
 	end
 
+	-- right wall
+	n = 0
+	for i=1,5 do
 
+		spr(44,112,16 + 16 * n,2,2)
+		n += 1
+	end
+
+	-- top wall
+	n = 0
+	for i=1,6 do
+
+		spr(10,16 + 16* n,0,2,2)
+		n += 1
+	end
+
+	-- bottom wall
+	n = 0
+	for i=1,6 do
+
+		spr(12,16 + 16* n,96,2,2)
+		n += 1
+	end
 end
+
 __gfx__
 0000000000077000015113b00000000000fee70000000000011111111111111cc111111111111110a11111111111111e00000000000000000000000000000000
 00000000007af7001001000100faaaa90fef7e80007ff940111111111111111cc111111111111111a11111111111111e00000000000000000000000000000000
