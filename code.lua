@@ -613,6 +613,8 @@ function _draw()
 	if scene == "menu" then
 		cls()
 		rectfill(0,0,127,127,8)
+		spr(64,35,20,8,4)
+		print("press x to start",33,70,0)
 
 	end
 
