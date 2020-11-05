@@ -354,16 +354,21 @@ function _update60()
 	-- horizontal
 
 	-- only one button can be held at a time
+	-- the second variable is moving
 	if (btn(0)) and not (btn(2)) and not (btn(3)) then
 		--pad_x -= 3
-		pad_dx = - pad_speed
+
+		--pad_dx = - pad_speed
+		pad_dx = pad_dx - 0.75
 		butpress = true
 		pad_position = "horizontal"
 	end
 
 	if (btn(1)) and not (btn(2)) and not (btn(3))then
 		--pad_x += 3
-		pad_dx = pad_speed
+		
+		--pad_dx = pad_speed
+		pad_dx = pad_dx + 0.75
 		butpress = true
 		pad_position = "horizontal"
 	end
@@ -372,21 +377,25 @@ function _update60()
 
 	if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
 		--pad_y -= 3
-		pad_dy = - pad_speed
+
+		--pad_dy = - pad_speed
+		pad_dy =  pad_dy - 0.75
 		butpress = true
 		pad_position = "vertical"
 	end
 
 	if (btn(3)) and not (btn(0)) then
 		--pad_y += 3
-		pad_dy = pad_speed
+
+		--pad_dy = pad_speed
+		pad_dy = pad_dy + 0.75
 		butpress = true
 		pad_position = "vertical"
 	end
 
 	if not(butpress) then
-		pad_dx = pad_dx/3
-		pad_dy = pad_dy/3
+		pad_dx = pad_dx/1.7
+		pad_dy = pad_dy/1.7
 	end
 
 
@@ -525,13 +534,13 @@ function _update60()
 
 		-- left pad check
 		if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-			ball_x -= 4
+			ball_x -= abs(pad_dx + pad_dy)
 
 		end
 
 		-- right pad check
 		if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-			ball_x += 4
+			ball_x += abs(pad_dx + pad_dy)
 
 		end
 
@@ -542,13 +551,13 @@ function _update60()
 
 		-- top pad check
 		if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
-			ball_y -= 4
+			ball_y -= abs(pad_dx + pad_dy)
 		end
 
 
 		-- bottom pad check
 		if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
-			ball_y += 4
+			ball_y += abs(pad_dx + pad_dy)
 		end
 	end
 
