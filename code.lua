@@ -154,443 +154,453 @@ function _init()
 
 	music(4,5000)
 
+	scene = "game"
+
 
 
 end
 
 function _update60()
 
+	if scene == "game" then
 
-	--debug
-	debug = ''
-	-- if x is pressed
-	if btnp(5) then
 
-		ball_frosted = true
-		frosted_timer = 100
-		-- frost SFX
-		sfx(27)
-	end
+		--debug
+		debug = ''
+		-- if x is pressed
+		if btnp(5) then
 
-	if ball_frosted == true then
-		frosted_timer -= 1
-		ball_col = 12
-		outline_col = 12
-		
-		if frosted_timer < 0 then
-			ball_frosted = false
-			ball_col = 9
-			outline_col = 8
-			-- unfrost sfx
-			sfx(28)
+			ball_frosted = true
+			frosted_timer = 100
+			-- frost SFX
+			sfx(27)
 		end
-	end
+
+		if ball_frosted == true then
+			frosted_timer -= 1
+			ball_col = 12
+			outline_col = 12
+			
+			if frosted_timer < 0 then
+				ball_frosted = false
+				ball_col = 9
+				outline_col = 8
+				-- unfrost sfx
+				sfx(28)
+			end
+		end
 
 
 
-	-- debug
-	if btnp(4) then
-		outline_col += 1
 		-- debug
-		if outline_col > 15 then
-			outline_col = 0
-		end
-	end
-
-
-	collision = false
-
-	-- debug animation
-	tomatoblink()
-
-
-	update_order()
-
-
-	-- local var if any button pressed
-	local butpress = false
-
-	-- trail particle
-	spawntrail(ball_x, ball_y)
-
-	-- updating the particles
-	updateparts()
-
-	-- target movement
-	target_x += target_dx
-	target_y += target_dy
-
-	-- top right corner hit
-	if target_x > 120 and target_y < 120 then
-		target_dx = 0
-		target_dy = target_dm
-	end
-
-	-- bottom right corner hit
-	if target_x > 120 and target_y > 120 then
-		target_dx = -target_dm
-		target_dy = 0
-	end
-
-
-	-- bottom left corner hit
-	if target_x < 7 and target_y > 120 then
-		target_dx = 0
-		target_dy = -target_dm
-	end
-
-	-- top left corner hit
-	if target_x < 7 and target_y < 7 then
-		target_dx = target_dm
-		target_dy = 0
-	end
-
-
-	-- sectarget movement
-
-	sectarget_x += sectarget_dx
-	sectarget_y += sectarget_dy
-
-	-- top right corner hit
-	if sectarget_x > 120 and sectarget_y < 120 then
-		sectarget_dx = 0
-		sectarget_dy = sectarget_dm
-	end
-
-	-- bottom right corner hit
-	if sectarget_x > 120 and sectarget_y > 120 then
-		sectarget_dx = -sectarget_dm
-		sectarget_dy = 0
-	end
-
-
-	-- bottom left corner hit
-	if sectarget_x < 7 and sectarget_y > 120 then
-		sectarget_dx = 0
-		sectarget_dy = -sectarget_dm
-	end
-
-	-- top left corner hit
-	if sectarget_x < 7 and sectarget_y < 7 then
-		sectarget_dx = sectarget_dm
-		sectarget_dy = 0
-	end
-
-	-- badtarget movement
-
-	badtarget_x += badtarget_dx
-	badtarget_y += badtarget_dy
-
-	-- top right corner hit
-	if badtarget_x > 120 and badtarget_y < 120 then
-		badtarget_dx = 0
-		badtarget_dy = badtarget_dm
-	end
-
-	-- bottom right corner hit
-	if badtarget_x > 120 and badtarget_y > 120 then
-		badtarget_dx = -badtarget_dm
-		badtarget_dy = 0
-	end
-
-
-	-- bottom left corner hit
-	if badtarget_x < 7 and badtarget_y > 120 then
-		badtarget_dx = 0
-		badtarget_dy = -badtarget_dm
-	end
-
-	-- top left corner hit
-	if badtarget_x < 7 and badtarget_y < 7 then
-		badtarget_dx = badtarget_dm
-		badtarget_dy = 0
-	end
-
-	-- ball movement
-
-	-- ball frosting 
-	if ball_frosted == false then
-		ball_x += ball_dx
-		ball_y += ball_dy
-	else
-
-		ball_x += 0
-		ball_y += 0
-	end
-	-- ball wall bouncing
-	-- radius is added or removed for better collision detection
-	if ball_x > 127 - ball_radius then
-		ball_dx = -ball_dm
-		ball_dy = 1 * sign(ball_dy)
-		-- wall collision sfx
-		sfx(1)
-
-	end
-
-	if ball_x < 0 + ball_radius then
-		ball_dx = ball_dm
-		ball_dy = 1 * sign(ball_dy)
-		-- wall collision sfx
-		sfx(1)
-	end
-
-	if ball_y > 111 - ball_radius then
-		ball_dy = -ball_dm
-		ball_dx = 1 * sign(ball_dx)
-		-- wall collision sfx
-		sfx(1)
-	end
-
-	if ball_y < 0 + ball_radius then
-		ball_dy = ball_dm
-		ball_dx = 1 * sign(ball_dx)
-		-- wall collision sfx
-		sfx(1)
-	end
-
-	-- horizontal
-
-	-- only one button can be held at a time
-	-- the second variable is moving
-	if (btn(0)) and not (btn(2)) and not (btn(3)) then
-		--pad_x -= 3
-
-		--pad_dx = - pad_speed
-		pad_dx = pad_dx - 0.75
-		butpress = true
-		pad_position = "horizontal"
-	end
-
-	if (btn(1)) and not (btn(2)) and not (btn(3))then
-		--pad_x += 3
-		
-		--pad_dx = pad_speed
-		pad_dx = pad_dx + 0.75
-		butpress = true
-		pad_position = "horizontal"
-	end
-
-	-- vertical pad movement 
-
-	if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
-		--pad_y -= 3
-
-		--pad_dy = - pad_speed
-		pad_dy =  pad_dy - 0.75
-		butpress = true
-		pad_position = "vertical"
-	end
-
-	if (btn(3)) and not (btn(0)) then
-		--pad_y += 3
-
-		--pad_dy = pad_speed
-		pad_dy = pad_dy + 0.75
-		butpress = true
-		pad_position = "vertical"
-	end
-
-	if not(butpress) then
-		pad_dx = pad_dx/1.7
-		pad_dy = pad_dy/1.7
-	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-	--pad clamp border
-	pad_x = mid(16,pad_x, 91)
-	pad_y = mid(26,pad_y,85)
-
-	if pad_position == "horizontal" then
-
-		pad_x += pad_dx
-	end
-
-	if pad_position == "vertical" then
-
-		pad_y += pad_dy
-
-	end
-	pad_color = 2
-	-- check if ball hit pad
-
-	-- pad horizontal collision
-	if (pad_position == "horizontal") then
-		--everything is alright
-		pad_hitbox_x = pad_x
-		pad_hitbox_y = pad_y
-		pad_hitbox_width = pad_width
-		pad_hitbox_height = pad_height
-
-		-- bouncebox left setup
-		--pad_bouncebox_left_x = pad_hitbox_x
-		--pad_bouncebox_left_y = pad_hitbox_y
-	end
-	-- pad vertical coliistion
-	if (pad_position == "vertical") then
-		-- addusting the variables for the hitbox
-		pad_hitbox_x = pad_x + pad_width / 2 - pad_height / 2 
-		pad_hitbox_y = pad_y - pad_width / 2
-		pad_hitbox_width = pad_height
-		pad_hitbox_height = pad_width
-
-		-- bouncebox left setup
-		-- left meaning on top
-	end
-
-
-
-	--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height) then
-
-
-	-- if (ball_box(pad_x - 1,pad_y,pad_x-1,pad_y + pad_height)) then
-	-- 	ball_x = 5
-	-- 
-	-- 	pad_color = 11
-
-	-- end
-
-
-
-	-- pad collision check against the new variables
-	if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
-		-- deal with collision
-
-		pad_color = 8
-		sfx(0)
-
-		-- ball angle change
-		-- absolute value
-
-		--horizontal check
-		if abs(pad_dx) > 1 then
-			-- change angle
-			if sign(pad_dx) == sign(ball_dx) then
-
-				-- pad and ball moving in the same direction
-				-- flatten the angle
-				-- mid locks value above 0 
-				setang(mid(0,ball_ang-1,2))
-			else
-				-- raise angle
-				if ball_ang==2 then
-					ball_dx = - ball_dx
-				else
-					setang(mid(0,ball_ang+1,2))
-				end
+		if btnp(4) then
+			scene = "menu"
+			outline_col += 1
+			-- debug
+			if outline_col > 15 then
+				outline_col = 0
 			end
-
-
 		end
 
 
-		if abs(pad_dy) > 1 then
-			-- change angle
-			if sign(pad_dy) == sign(ball_dy) then
+		collision = false
 
-				-- pad and ball moving in the same direction
-				-- flatten the angle
-				-- mid locks value above 0 
-				setang(mid(0,ball_ang+1,2))
-			else
-				-- raise angle
-				if ball_ang==2 then
-					ball_dy = - ball_dy
-				else
-					setang(mid(0,ball_ang-1,2))
-				end
-			end
+		-- debug animation
+		tomatoblink()
 
+
+		update_order()
+
+
+		-- local var if any button pressed
+		local butpress = false
+
+		-- trail particle
+		spawntrail(ball_x, ball_y)
+
+		-- updating the particles
+		updateparts()
+
+		-- target movement
+		target_x += target_dx
+		target_y += target_dy
+
+		-- top right corner hit
+		if target_x > 120 and target_y < 120 then
+			target_dx = 0
+			target_dy = target_dm
+		end
+
+		-- bottom right corner hit
+		if target_x > 120 and target_y > 120 then
+			target_dx = -target_dm
+			target_dy = 0
+		end
+
+
+		-- bottom left corner hit
+		if target_x < 7 and target_y > 120 then
+			target_dx = 0
+			target_dy = -target_dm
+		end
+
+		-- top left corner hit
+		if target_x < 7 and target_y < 7 then
+			target_dx = target_dm
+			target_dy = 0
+		end
+
+
+		-- sectarget movement
+
+		sectarget_x += sectarget_dx
+		sectarget_y += sectarget_dy
+
+		-- top right corner hit
+		if sectarget_x > 120 and sectarget_y < 120 then
+			sectarget_dx = 0
+			sectarget_dy = sectarget_dm
+		end
+
+		-- bottom right corner hit
+		if sectarget_x > 120 and sectarget_y > 120 then
+			sectarget_dx = -sectarget_dm
+			sectarget_dy = 0
+		end
+
+
+		-- bottom left corner hit
+		if sectarget_x < 7 and sectarget_y > 120 then
+			sectarget_dx = 0
+			sectarget_dy = -sectarget_dm
+		end
+
+		-- top left corner hit
+		if sectarget_x < 7 and sectarget_y < 7 then
+			sectarget_dx = sectarget_dm
+			sectarget_dy = 0
+		end
+
+		-- badtarget movement
+
+		badtarget_x += badtarget_dx
+		badtarget_y += badtarget_dy
+
+		-- top right corner hit
+		if badtarget_x > 120 and badtarget_y < 120 then
+			badtarget_dx = 0
+			badtarget_dy = badtarget_dm
+		end
+
+		-- bottom right corner hit
+		if badtarget_x > 120 and badtarget_y > 120 then
+			badtarget_dx = -badtarget_dm
+			badtarget_dy = 0
+		end
+
+
+		-- bottom left corner hit
+		if badtarget_x < 7 and badtarget_y > 120 then
+			badtarget_dx = 0
+			badtarget_dy = -badtarget_dm
+		end
+
+		-- top left corner hit
+		if badtarget_x < 7 and badtarget_y < 7 then
+			badtarget_dx = badtarget_dm
+			badtarget_dy = 0
+		end
+
+		-- ball movement
+
+		-- ball frosting 
+		if ball_frosted == false then
+			ball_x += ball_dx
+			ball_y += ball_dy
+		else
+
+			ball_x += 0
+			ball_y += 0
+		end
+		-- ball wall bouncing
+		-- radius is added or removed for better collision detection
+		if ball_x > 127 - ball_radius then
+			ball_dx = -ball_dm
+			ball_dy = 1 * sign(ball_dy)
+			-- wall collision sfx
+			sfx(1)
 
 		end
 
+		if ball_x < 0 + ball_radius then
+			ball_dx = ball_dm
+			ball_dy = 1 * sign(ball_dy)
+			-- wall collision sfx
+			sfx(1)
+		end
+
+		if ball_y > 111 - ball_radius then
+			ball_dy = -ball_dm
+			ball_dx = 1 * sign(ball_dx)
+			-- wall collision sfx
+			sfx(1)
+		end
+
+		if ball_y < 0 + ball_radius then
+			ball_dy = ball_dm
+			ball_dx = 1 * sign(ball_dx)
+			-- wall collision sfx
+			sfx(1)
+		end
+
+		-- horizontal
+
+		-- only one button can be held at a time
+		-- the second variable is moving
+		if (btn(0)) and not (btn(2)) and not (btn(3)) then
+			--pad_x -= 3
+
+			--pad_dx = - pad_speed
+			pad_dx = pad_dx - 0.75
+			butpress = true
+			pad_position = "horizontal"
+		end
+
+		if (btn(1)) and not (btn(2)) and not (btn(3))then
+			--pad_x += 3
+			
+			--pad_dx = pad_speed
+			pad_dx = pad_dx + 0.75
+			butpress = true
+			pad_position = "horizontal"
+		end
+
+		-- vertical pad movement 
+
+		if (btn(2)) and not (btn(0)) and not (btn(1)) and not (btn(3)) then
+			--pad_y -= 3
+
+			--pad_dy = - pad_speed
+			pad_dy =  pad_dy - 0.75
+			butpress = true
+			pad_position = "vertical"
+		end
+
+		if (btn(3)) and not (btn(0)) then
+			--pad_y += 3
+
+			--pad_dy = pad_speed
+			pad_dy = pad_dy + 0.75
+			butpress = true
+			pad_position = "vertical"
+		end
+
+		if not(butpress) then
+			pad_dx = pad_dx/1.7
+			pad_dy = pad_dy/1.7
+		end
+
+
+
+
+
+
+
+
+
+
+
+
+
+		--pad clamp border
+		--pad_x = mid(16,pad_x, 91)
+		--pad_y = mid(26,pad_y,85)
+
+		if pad_position == "horizontal" then
+
+			pad_x += pad_dx
+			pad_x = mid(14,pad_x, 84)
+		end
+
+		if pad_position == "vertical" then
+
+			pad_y += pad_dy
+			pad_y = mid(29,pad_y,82)
+
+		end
+		pad_color = 2
+		-- check if ball hit pad
+
+		-- pad horizontal collision
 		if (pad_position == "horizontal") then
-			ball_dy = - ball_dy
-		end
+			--everything is alright
+			pad_hitbox_x = pad_x
+			pad_hitbox_y = pad_y
+			pad_hitbox_width = pad_width
+			pad_hitbox_height = pad_height
 
+			-- bouncebox left setup
+			--pad_bouncebox_left_x = pad_hitbox_x
+			--pad_bouncebox_left_y = pad_hitbox_y
+		end
+		-- pad vertical coliistion
 		if (pad_position == "vertical") then
-			ball_dx = - ball_dx
+			-- addusting the variables for the hitbox
+			pad_hitbox_x = pad_x + pad_width / 2 - pad_height / 2 
+			pad_hitbox_y = pad_y - pad_width / 2
+			pad_hitbox_width = pad_height
+			pad_hitbox_height = pad_width
+
+			-- bouncebox left setup
+			-- left meaning on top
 		end
+
+
+
+		--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height) then
+
+
+		-- if (ball_box(pad_x - 1,pad_y,pad_x-1,pad_y + pad_height)) then
+		-- 	ball_x = 5
+		-- 
+		-- 	pad_color = 11
+
+		-- end
+
+
+
+		-- pad collision check against the new variables
+		if (ball_box(pad_hitbox_x, pad_hitbox_y, pad_hitbox_width, pad_hitbox_height)) then
+			-- deal with collision
+
+			pad_color = 8
+			sfx(0)
+
+			-- ball angle change
+			-- absolute value
+
+			--horizontal check
+			if abs(pad_dx) > 1 then
+				-- change angle
+				if sign(pad_dx) == sign(ball_dx) then
+
+					-- pad and ball moving in the same direction
+					-- flatten the angle
+					-- mid locks value above 0 
+					setang(mid(0,ball_ang-1,2))
+				else
+					-- raise angle
+					if ball_ang==2 then
+						ball_dx = - ball_dx
+					else
+						setang(mid(0,ball_ang+1,2))
+					end
+				end
+
+
+			end
+
+
+			if abs(pad_dy) > 1 then
+				-- change angle
+				if sign(pad_dy) == sign(ball_dy) then
+
+					-- pad and ball moving in the same direction
+					-- flatten the angle
+					-- mid locks value above 0 
+					setang(mid(0,ball_ang+1,2))
+				else
+					-- raise angle
+					if ball_ang==2 then
+						ball_dy = - ball_dy
+					else
+						setang(mid(0,ball_ang-1,2))
+					end
+				end
+
+
+			end
+
+			if (pad_position == "horizontal") then
+				ball_dy = - ball_dy
+			end
+
+			if (pad_position == "vertical") then
+				ball_dx = - ball_dx
+			end
+		end
+
+
+
+
+		if pad_position == "horizontal" then
+
+
+			-- left pad check
+			if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+				ball_x -= abs(pad_dx + pad_dy)
+
+			end
+
+			-- right pad check
+			if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+				ball_x += abs(pad_dx + pad_dy)
+
+			end
+
+
+		end
+
+		if pad_position == "vertical" then
+
+			-- top pad check
+			if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
+				ball_y -= abs(pad_dx + pad_dy) * 2
+
+			end
+
+
+			-- bottom pad check
+			if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
+				ball_y += abs(pad_dx + pad_dy)
+
+			end
+		end
+
+
+		--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height)
+
+		--if pad_position == "horizontal" then
+
+		--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x + 0,pad_bouncebox_left_y+3) then
+		--	ball_x = 5
+		--	pad_color = 11
+		--end
+
+
+		--end
+
+
+		-- ing system update
+		update_ing()
+
+		-- if we've got order rolling
+		spawnnew_ing()
+
+		if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
+			player_score += 250
+			new_order()
+			--new order sfx
+			sfx(6)
+		end
+
+
+
+
 	end
-
-
-
-
-	if pad_position == "horizontal" then
-
-
-		-- left pad check
-		if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-			ball_x -= abs(pad_dx + pad_dy)
-
-		end
-
-		-- right pad check
-		if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-			ball_x += abs(pad_dx + pad_dy)
-
-		end
-
-
-	end
-
-	if pad_position == "vertical" then
-
-		-- top pad check
-		if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
-			ball_y -= abs(pad_dx + pad_dy)
-		end
-
-
-		-- bottom pad check
-		if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
-			ball_y += abs(pad_dx + pad_dy)
-		end
-	end
-
-
-	--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x,pad_bouncebox_left_y + pad_hitbox_height)
-
-	--if pad_position == "horizontal" then
-
-	--if ball_box(pad_bouncebox_left_x,pad_bouncebox_left_y,pad_bouncebox_left_x + 0,pad_bouncebox_left_y+3) then
-	--	ball_x = 5
-	--	pad_color = 11
-	--end
-
-
-	--end
-
-
-	-- ing system update
-	update_ing()
-
-	-- if we've got order rolling
-	spawnnew_ing()
-
-	if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
-		player_score += 250
-		new_order()
-		--new order sfx
-		sfx(6)
-	end
-
-
 
 
 end
-
-
 
 
 
@@ -600,80 +610,90 @@ end
 
 function _draw()
 
-	cls()
+	if scene == "menu" then
+		cls()
+		rectfill(0,0,127,127,8)
 
-	doshake()
-
-	-- background from mockup
-	drawbackground()
-
-
-	-- test sprites
-	-- spr(1,60,101)
-	-- spr(2,117,81)
-	-- spr(3,3,23)
-	-- spr(4,84,3)
-
-	-- animation test
-	-- spr(s,60,40)
-
-
-
-	-- target
-	-- circfill(target_x,target_y,target_radius,11)
-
-	-- sectarget
-	-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
-
-	-- bad target
-	--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
-	-- spr(badtarget_sprite,badtarget_x,badtarget_y)
-
-	-- player pad
-	--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-
-	--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
-
-	if pad_position == "horizontal" then
-		rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
 	end
 
-	if pad_position == "vertical" then
-		rectfill(
-		pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
-		pad_y - pad_width / 2,
-		pad_x + pad_width /2,
-		pad_y + pad_width / 2,
-		pad_color
-		)
+	if scene == "game" then
+
+		cls()
+
+		doshake()
+
+		-- background from mockup
+		drawbackground()
+
+
+		-- test sprites
+		-- spr(1,60,101)
+		-- spr(2,117,81)
+		-- spr(3,3,23)
+		-- spr(4,84,3)
+
+		-- animation test
+		-- spr(s,60,40)
+
+
+
+		-- target
+		-- circfill(target_x,target_y,target_radius,11)
+
+		-- sectarget
+		-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
+
+		-- bad target
+		--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+		-- spr(badtarget_sprite,badtarget_x,badtarget_y)
+
+		-- player pad
+		--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+
+		--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
+
+		if pad_position == "horizontal" then
+			rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+		end
+
+		if pad_position == "vertical" then
+			rectfill(
+			pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
+			pad_y - pad_width / 2,
+			pad_x + pad_width /2,
+			pad_y + pad_width / 2,
+			pad_color
+			)
+		end
+
+		-- particles
+		drawparts()
+		--print(#part,1,1,10)
+
+
+		-- ball outline
+		circfill(ball_x,ball_y,ball_radius + 1, outline_col)
+		--ball
+		circfill(ball_x,ball_y,ball_radius, ball_col)
+
+
+
+		--camera(pad_x - 64,pad_y - 64 )
+
+		-- bouncebox left setup
+		--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
+
+
+
+
+		-- ing system draw
+		draw_ing()
+
+		drawserveboxes()
+
+		--debug
+		
 	end
-
-	-- particles
-	drawparts()
-	--print(#part,1,1,10)
-
-
-	-- ball outline
-	circfill(ball_x,ball_y,ball_radius + 1, outline_col)
-	--ball
-	circfill(ball_x,ball_y,ball_radius, ball_col)
-
-
-
-	--camera(pad_x - 64,pad_y - 64 )
-
-	-- bouncebox left setup
-	--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
-
-
-
-
-	-- ing system draw
-	draw_ing()
-
-	drawserveboxes()
-
-	--debug
 
 
 end
@@ -811,8 +831,6 @@ function drawbackground()
 	-- big box - ramka
 	
 
-	-- top left corner
-	spr(6,0,0,2,2)
 
 	-- top right corner
 	spr(8,112,0,2,2)
@@ -820,8 +838,6 @@ function drawbackground()
 	-- bottom left corner
 	spr(38,0,96,2,2)
 
-	-- bottom right corner
-	spr(6,112,96,2,2,true,true)
 
 
 	-- wall joining the corners
@@ -906,6 +922,17 @@ function drawserveboxes()
 	-- serve boxes
 	-- rectfill(0,0,12,12,line_col)
 	 --rectfill(115,99,127,111,line_col)
+	-- top left corner
+	spr(6,0,0,2,2)
+
+	-- top right corner
+	--spr(8,112,0,2,2)
+
+	-- bottom left corner
+	--spr(38,0,96,2,2)
+
+	-- bottom right corner
+	spr(6,112,96,2,2,true,true)
 end
 
 -- debug
