@@ -759,8 +759,6 @@ function drawparts()
 			circfill(_p.x,_p.y,sin(_p.age) * 10,_p.col)
 			pset(_p.x,_p.y,_p.col)
 		end
-		circfill(_p.x,_p.y,sin(_p.age) * 10,_p.col)
-		pset(_p.x,_p.y,_p.col)
 	end
 end
 
@@ -805,7 +803,7 @@ function drawbackground()
 	
 
 	-- top left corner
-	spr(6,0,0,2,2)
+	--spr(6,0,0,2,2)
 
 	-- top right corner
 	spr(8,112,0,2,2)
@@ -814,7 +812,7 @@ function drawbackground()
 	spr(38,0,96,2,2)
 
 	-- bottom right corner
-	spr(6,112,96,2,2,true,true)
+	--spr(6,112,96,2,2,true,true)
 
 
 	-- wall joining the corners
@@ -899,6 +897,13 @@ function drawserveboxes()
 	-- serve boxes
 	-- rectfill(0,0,12,12,line_col)
 	 --rectfill(115,99,127,111,line_col)
+	-- top left corner
+	spr(6,0,0,2,2)
+
+
+	-- bottom right corner
+	spr(6,112,96,2,2,true,true)
+
 end
 
 -- debug
