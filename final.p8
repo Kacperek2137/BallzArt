@@ -724,7 +724,7 @@ function spawntrail(_x, _y)
 	local _ox = sin(_ang) * ball_radius * 0.6
 	local _oy = cos(_ang) * ball_radius * 0.6
 
-	addpart(_x + _ox,_y + _oy,0,20 + rnd(15), 9, 10)
+	addpart(_x + _ox,_y + _oy,0,20 + rnd(15), 8, 2)
 end
 
 function spawnboom(_x,_y)
@@ -806,7 +806,7 @@ function drawbackground()
 	
 
 	-- top left corner
-	--spr(6,0,0,2,2)
+	spr(6,0,0,2,2)
 
 	-- top right corner
 	spr(8,112,0,2,2)
@@ -815,7 +815,7 @@ function drawbackground()
 	spr(38,0,96,2,2)
 
 	-- bottom right corner
-	--spr(6,112,96,2,2,true,true)
+	spr(6,112,96,2,2,true,true)
 
 
 	-- wall joining the corners
@@ -900,13 +900,6 @@ function drawserveboxes()
 	-- serve boxes
 	-- rectfill(0,0,12,12,line_col)
 	 --rectfill(115,99,127,111,line_col)
-	-- top left corner
-	spr(6,0,0,2,2)
-
-
-	-- bottom right corner
-	spr(6,112,96,2,2,true,true)
-
 end
 
 -- debug
