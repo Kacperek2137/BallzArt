@@ -152,18 +152,37 @@ function _init()
 	-- order is starting now debug
 	new_order()
 
+
+	-- white frame 
+	whiteframe = 0
+
 	-- game start sfx
 	sfx(26)
 
 	music(4,5000)
 
-	scene = "game"
+	scene = "menu"
+	-- game scenes:
+	-- menu
+	-- game
+	-- gameover
 
 
 
 end
 
 function _update60()
+
+	if scene == "menu" then
+		if btnp(5) then
+			scene = "game"
+		end
+	end
+
+
+	if scene == "gameover" then
+
+	end
 
 	if scene == "game" then
 
@@ -197,7 +216,7 @@ function _update60()
 
 		-- debug
 		if btnp(4) then
-			scene = "menu"
+			spawnboom(50,50)
 			outline_col += 1
 			-- debug
 			if outline_col > 15 then
@@ -621,6 +640,14 @@ function _draw()
 
 	end
 
+	if scene == "gameover" then
+		cls()
+		rectfill(0,0,127,127,0)
+		spr(64,35,20,8,4)
+		print("press x to start",33,80,8)
+		print("game over",33,70,8)
+	end
+
 	if scene == "game" then
 
 		cls()
@@ -698,6 +725,12 @@ function _draw()
 
 		--debug
 		
+		-- draw the white frame on the explosion
+		if whiteframe < 5 then
+			rectfill(0,0,127,127,7)
+			whiteframe += 1
+
+		end
 	end
 
 
@@ -759,7 +792,7 @@ function spawntrail(_x, _y)
 end
 
 function spawnboom(_x,_y)
-	addpart(_x,_y,8,60,8,0)
+	addpart(_x,_y,8,200,8,0)
 end
 
 function updateparts()
@@ -790,8 +823,57 @@ function drawparts()
 
 		-- if bomb
 		if _p.tpe == 8 then
-			circfill(_p.x,_p.y,sin(_p.age) * 10,_p.col)
-			pset(_p.x,_p.y,_p.col)
+			-- big explosion circle range
+			local bigrange
+			local t = 0
+
+			local col1 = 8
+			local col2 = 9
+			local col3 = 7
+			-- function that I made 
+			-- - 1/10 x^2 + 10
+			-- dodaj przesunięcie na b żeby symetria była gdzie indziej
+
+			--bigrange = mid(0,_p.age,15)
+			-- fast function
+			--bigrange = - bigrange * (bigrange - 10)
+			-- new function
+			bigrange = _p.age
+			bigrange = (- bigrange / 60) * (bigrange - 120)
+			--bigrange = (- bigrange / 20) * (bigrange - 50)
+
+			if _p.age > 0 then
+				_p.col = 7 
+			end
+
+			if _p.age > 10 then
+				_p.col = 10
+			end
+
+			if _p.age > 20 then
+				_p.col = 9
+			end
+
+			if _p.age > 30 then
+				_p.col = 8
+			end
+
+			if _p.age > 40 then
+				_p.col = 0
+				col1 = 0
+				col2 = 0
+				col3 = 0
+			end
+
+
+			circfill(_p.x,_p.y,bigrange,col1)
+			circfill(_p.x,_p.y,bigrange /2,col2)
+			circfill(_p.x,_p.y,bigrange /4, col3)
+
+			circfill(_p.x + rnd(5),_p.y + rnd(3),bigrange,col1)
+			circfill(_p.x - rnd(5),_p.y,bigrange /2,col2)
+			circfill(_p.x,_p.y + rnd(3),bigrange /4, col3)
+			--pset(_p.x,_p.y,_p.col)
 		end
 	end
 end
@@ -1029,6 +1111,7 @@ function update_order()
 	-- if timer reaches 0 it doesn't go negative
 	if order_time < 0 then
 		order_time = 0
+		scene = "gameover"
 	end
 
 	-- translating the order_time to % value
@@ -1139,11 +1222,14 @@ function update_ing()
 
 			-- if bomb
 			if ing.tpe == 5 then
+				-- explosion in the middle
+				spawnboom(ing.x + 4,ing.y + 4)
+				whiteframe = 0
 				--sfx of explosion
 				sfx(29)
 				order_time -= 10
 				shake+=1
-				spawnboom(ing.x,ing.y)
+				--spawnboom(ing.x,ing.y)
 			end
 
 
