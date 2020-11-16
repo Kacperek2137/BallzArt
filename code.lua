@@ -5,7 +5,7 @@ function _init()
 
 
 	--debug outline
-	outline_col = 8
+	outline_col = 0
 	-- animation sprite number
 	s = 17
 	-- animation delay
@@ -153,6 +153,8 @@ function _init()
 	-- white frame 
 	whiteframe = 0
 
+	frosted_cooldown = 0
+
 	-- game start sfx
 	sfx(26)
 
@@ -186,24 +188,42 @@ function _update60()
 
 		--debug
 		debug = ''
+
+
+		frosted_cooldown -= 1
+
+
+		--display that you can frost
+		if frosted_cooldown <= 0 then
+			outline_col = 7
+			-- TODO sfx loaded
+
+		end
 		-- if x is pressed
 		if btnp(5) then
 
-			ball_frosted = true
-			frosted_timer = 100
-			-- frost SFX
-			sfx(27)
+			-- player can frost every 3 seconds
+			if frosted_cooldown <= 0 then
+
+				ball_frosted = true
+				frosted_timer = 100
+				-- frost SFX
+				sfx(27)
+				frosted_cooldown = 180
+			end
 		end
 
 		if ball_frosted == true then
 			frosted_timer -= 1
+			--ball_col = 12
+			--outline_col = 12
 			ball_col = 12
 			outline_col = 12
 			
 			if frosted_timer < 0 then
 				ball_frosted = false
-				ball_col = 9
-				outline_col = 8
+				ball_col = 8
+				outline_col = 2
 				-- unfrost sfx
 				sfx(28)
 			end
