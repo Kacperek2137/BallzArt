@@ -721,7 +721,7 @@ function _draw()
 		--debug
 
 		--debug
-		pset(0,0,7)
+		--pset(0,0,7)
 
 	end
 
@@ -1543,7 +1543,8 @@ function drawcredits()
 	-- left from the start
 	local xoffset = 128
 
-	pset(0 -xoffset,0,7)
+	--debug
+	--pset(0 -xoffset,0,7)
 
 	local n = 0
 	for i=0,7 do
@@ -1553,47 +1554,114 @@ function drawcredits()
 	end
 
 	-- printing the credits
-	print("credits", 50 - xoffset, 10,7)
+	-- header background
+	rectfill(45 -xoffset,8,82 -xoffset,30,2)
+	rect(45 -xoffset,8,82 -xoffset,30,10)
+	print("credits", 50 - xoffset, 12,7)
+
+	categories = {"code", "ux/ui", "degign", "vfx", "graphics", "sfx", "music", "mentoring"}
+	authors = {"gabriel", "gabriel", "gabriel,kacper", "gabriel", "ola", "kacper,kornel","kacper,kornel","konrad,jedrzej,kamil"}
+	local highsocrexoffset = -35
+	local highsocreyoffset = 10
+
+	--pset(0 -xoffset,0,7)
+
+	local n = 0
+	for i=0,7 do
+		spr(139,0 + n - xoffset + highsocrexoffset,30,2,2)
+		spr(139,0 + n - xoffset + highsocrexoffset,46,2,2)
+		n += 16
+	end
+
+	-- header
+	-- bottom text
+	print("menu \145",50 -xoffset,115,8)
+
+	-- box
+	rectfill(33 -xoffset + highsocrexoffset + 4,20,75-xoffset + highsocrexoffset + 85,108,2)
+	rect(33 -xoffset + highsocrexoffset + 4,20,75-xoffset + highsocrexoffset + 85,108,10)
+
+	line(46 -xoffset,20,81 -xoffset,20,2)
+	-- letters
+	for i=1,8 do
+		print(categories[i],40 -xoffset + highsocrexoffset, 17 + i*10,7)
+		print(authors[i],79 -xoffset + highsocrexoffset, 17 + i*10,7)
+		--print(i,39 -xoffset + highsocrexoffset, 17 + i*10,7)
+
+	end
 end
 
 function drawhighscore()
 	local xoffset = -128
 
-	pset(0 -xoffset,0,7)
+	local highsocrexoffset = 10
+	local highsocreyoffset = 10
+
+	--pset(0 -xoffset,0,7)
 
 	local n = 0
 	for i=0,7 do
-		spr(139,0 + n - xoffset,30,2,2)
-		spr(139,0 + n - xoffset,46,2,2)
+		spr(139,0 + n - xoffset + highsocrexoffset,30,2,2)
+		spr(139,0 + n - xoffset + highsocrexoffset,46,2,2)
 		n += 16
+	end
+
+	-- header
+	print("high score", 45 - xoffset, 12,7)
+	-- bottom text
+	print("\139 menu",50 -xoffset,100,8)
+
+	-- box
+	rectfill(33 -xoffset + highsocrexoffset,20,75-xoffset + highsocrexoffset,78,2)
+	rect(33 -xoffset + highsocrexoffset,20,75-xoffset + highsocrexoffset,78,10)
+	-- letters
+	for i=1,5 do
+		print(hs[i],50 -xoffset + highsocrexoffset, 17 + i*10,7)
+		print(i,39 -xoffset + highsocrexoffset, 17 + i*10,7)
+
 	end
 end
 
 -- resets the highscore
 function reseths()
-	dset(0, 500)
-	dset(1, 400)
-	dset(2, 300)
-	dset(3, 200)
-	dset(4, 100)
-
+	hs={500,400,300,200,100}
+	savehs()
 end
 
 
 function loadhs()
-	local _slot
+	local _slot = 0
 
 	if dget(0) == 1 then
 		-- load the data
 		_slot += 1
-		for i=1,#hs do
+		for i=1,5 do
 
 			hs[i] = dget(_slot)
+			_slot += 1
 		end
+	else
+		reseths()
+
 	end
 
 end
 
 function savehs()
+	local _slot = 0
+	dset(0, 1)
 
+	if dget(0) == 1 then
+		-- load the data
+		_slot = 1
+		for i=1,5 do
+			dset(_slot,hs[i])
+			_slot += 1
+		end
+		debug = dget(1)
+	else
+		hs={500,400,300,200,100}
+		savehs()
+
+	end
 end
