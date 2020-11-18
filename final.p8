@@ -1466,8 +1466,8 @@ function update_camera()
 	if camera_active_room == 0 and cameramoving == true and camera_direction == 1 then
 		-- if camera moving right
 			if camerax < 127 then
-				camerax += 5
-				--camerax = camerax * 1.2 + 3
+				--camerax += 5
+				camerax = camerax * 1.2 + 3
 
 			else
 				camera_active_room = 1
@@ -1481,8 +1481,8 @@ function update_camera()
 	if camera_active_room == 0 and cameramoving == true and camera_direction == -1 then
 		-- if camera moving left
 			if camerax > -128 then
-				camerax -= 5
-				--camerax = camerax * 1.2 + 3
+				--camerax -= 5
+				camerax = camerax * 1.2 - 3
 
 
 			else
@@ -1497,6 +1497,7 @@ function update_camera()
 		-- if camera moving left
 			if camerax > 0 then
 				camerax -= 5
+				camerax = mid(0,camerax,128)
 
 			else
 				camera_active_room = 0
