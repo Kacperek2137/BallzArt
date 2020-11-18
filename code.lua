@@ -197,14 +197,18 @@ function _update60()
 		
 		-- right
 		if btn(1) then
-			cameramoving = true
-			camera_direction = 1
+			if cameramoving == false and (camera_active_room == 0 or camera_active_room == -1) then
+				cameramoving = true
+				camera_direction = 1
+			end
 		end
 
 		-- left
 		if btn(0) then
-			cameramoving = true
-			camera_direction = -1
+			if cameramoving == false and (camera_active_room == 0 or camera_active_room == 1) then
+				cameramoving = true
+				camera_direction = -1
+			end
 		end
 
 		update_camera()
@@ -686,7 +690,7 @@ function _draw()
 	if scene == "menu" then
 		cls()
 		-- background color
-		rectfill(0,0,127,127,1)
+		rectfill(0,0,127,127,0)
 		-- background pattern
 		drawbackgroundpattern()
 		-- logo
@@ -700,6 +704,9 @@ function _draw()
 
 		drawcredits()
 		drawhighscore()
+		-- cross pattern
+		--spr(137,0,30,2,2)
+		--spr(141,112,46,2,2)
 		camera(camerax,0)
 
 		--debug
@@ -1530,11 +1537,24 @@ function drawcredits()
 
 	local n = 0
 	for i=0,7 do
-		spr(137,0 + n - xoffset,30,2,2)
-		spr(137,0 + n - xoffset,46,2,2)
+		spr(139,0 + n - xoffset,30,2,2)
+		spr(139,0 + n - xoffset,46,2,2)
 		n += 16
 	end
+
+	-- printing the credits
+	print("credits", 50 - xoffset, 10,7)
 end
 
 function drawhighscore()
+	local xoffset = -128
+
+	pset(0 -xoffset,0,7)
+
+	local n = 0
+	for i=0,7 do
+		spr(139,0 + n - xoffset,30,2,2)
+		spr(139,0 + n - xoffset,46,2,2)
+		n += 16
+	end
 end
