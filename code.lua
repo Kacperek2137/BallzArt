@@ -155,6 +155,20 @@ function _init()
 
 	frosted_cooldown = 0
 
+
+	-- camera moving
+	camerax = 0
+	camera_direction = 0 
+	cameratimer = 0
+	cameramoving = false
+
+
+	-- in which room are we now? 
+	-- -1 credits
+	-- 0 splash
+	-- 1 highscore
+	camera_active_room = 0
+
 	-- game start sfx
 	sfx(26)
 
@@ -173,9 +187,29 @@ end
 function _update60()
 
 	if scene == "menu" then
+		-- x to start the game
 		if btnp(5) then
 			scene = "game"
 		end
+
+		-- moving between rooms in the menu scene
+		-- we start in the room 0
+		
+		-- right
+		if btn(1) then
+			cameramoving = true
+			camera_direction = 1
+		end
+
+		-- left
+		if btn(0) then
+			cameramoving = true
+			camera_direction = -1
+		end
+
+		update_camera()
+
+			
 	end
 
 
@@ -651,9 +685,26 @@ function _draw()
 
 	if scene == "menu" then
 		cls()
-		rectfill(0,0,127,127,8)
-		spr(64,35,20,8,4)
-		print("press x to start",33,70,0)
+		-- background color
+		rectfill(0,0,127,127,1)
+		-- background pattern
+		drawbackgroundpattern()
+		-- logo
+		spr(129,35,20,8,7)
+		print("press \151 to start",33,80,8)
+		print("\145 highscore",45,90,8)
+		print("\139 credits",45,100,8)
+		--debug
+		rectfill(128,0,256,127,9)
+		rectfill(140,50,150,60,7)
+
+		drawcredits()
+		camera(camerax,0)
+
+		--debug
+
+		--debug
+		pset(0,0,7)
 
 	end
 
@@ -670,6 +721,7 @@ function _draw()
 		cls()
 
 		doshake()
+
 
 		-- background from mockup
 		drawbackground()
@@ -1393,3 +1445,91 @@ function doshake()
  -- reset to 0 when very low
  shake = shake*0.95
  if (shake<0.05) shake=0 end
+
+
+function drawbackgroundpattern()
+	local n = 0
+	for i=0,8 do
+		spr(139,0 + n,30,2,2)
+		spr(139,0 + n,46,2,2)
+		n += 16
+	end
+end
+
+
+function update_camera()
+
+	-- if camera in main menu and moving right
+	if camera_active_room == 0 and cameramoving == true and camera_direction == 1 then
+		-- if camera moving right
+			if camerax < 127 then
+				camerax += 5
+				--camerax = camerax * 1.2 + 3
+
+			else
+				camera_active_room = 1
+				cameramoving = false
+
+			end
+
+	end
+
+	-- if camera in main menu and moving left
+	if camera_active_room == 0 and cameramoving == true and camera_direction == -1 then
+		-- if camera moving left
+			if camerax > -128 then
+				camerax -= 5
+				--camerax = camerax * 1.2 + 3
+
+
+			else
+				camera_active_room = -1
+				cameramoving = false
+
+			end
+	end
+
+	-- if camera in high score and moving left
+	if camera_active_room == 1 and cameramoving == true and camera_direction == -1 then
+		-- if camera moving left
+			if camerax > 0 then
+				camerax -= 5
+
+			else
+				camera_active_room = 0
+				cameramoving = false
+
+			end
+	end
+
+	-- if camera in credits and moving right
+	if camera_active_room == -1 and cameramoving == true and camera_direction == 1 then
+		-- if camera moving left
+			if camerax < 0 then
+				camerax += 5
+				camerax = mid(-128,camerax,0)
+
+			else
+				camera_active_room = 0
+				cameramoving = false
+
+			end
+	end
+	camerax = mid(-128,camerax,128)
+end
+
+
+
+function drawcredits()
+	-- left from the start
+	local xoffset = 128
+
+	pset(0 -xoffset,0,7)
+
+	local n = 0
+	for i=0,7 do
+		spr(137,0 + n - xoffset,30,2,2)
+		spr(137,0 + n - xoffset,46,2,2)
+		n += 16
+	end
+end
