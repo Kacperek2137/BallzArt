@@ -172,10 +172,13 @@ function _init()
 	-- 1 highscore
 	camera_active_room = 0
 
-	-- game start sfx
-	sfx(26)
 
-	music(4,5000)
+	-- high score
+	cartdata("lkg_picomaki")
+
+	hs = {}
+	loadhs()
+
 
 	scene = "menu"
 	-- game scenes:
@@ -183,6 +186,7 @@ function _init()
 	-- game
 	-- gameover
 
+	music(1)
 
 
 end
@@ -193,6 +197,7 @@ function _update60()
 		-- x to start the game
 		if btnp(5) then
 			scene = "game"
+			music(4,5000)
 		end
 
 		-- moving between rooms in the menu scene
@@ -203,6 +208,7 @@ function _update60()
 			if cameramoving == false and (camera_active_room == 0 or camera_active_room == -1) then
 				cameramoving = true
 				camera_direction = 1
+				sfx(34)
 			end
 		end
 
@@ -211,6 +217,7 @@ function _update60()
 			if cameramoving == false and (camera_active_room == 0 or camera_active_room == 1) then
 				cameramoving = true
 				camera_direction = -1
+				sfx(34)
 			end
 		end
 
@@ -222,9 +229,13 @@ function _update60()
 
 	if scene == "gameover" then
 
+
 	end
 
 	if scene == "game" then
+
+		-- game start sfx
+		--sfx(26)
 
 
 		--debug
@@ -702,8 +713,6 @@ function _draw()
 		print("‘ highscore",45,90,8)
 		print("‹ credits",45,100,8)
 		--debug
-		rectfill(128,0,256,127,9)
-		rectfill(140,50,150,60,7)
 
 		drawcredits()
 		drawhighscore()
@@ -1192,6 +1201,7 @@ function update_order()
 	if order_time < 0 then
 		order_time = 0
 		scene = "gameover"
+		music(10)
 	end
 
 	-- translating the order_time to % value
@@ -1560,6 +1570,35 @@ function drawhighscore()
 		spr(139,0 + n - xoffset,46,2,2)
 		n += 16
 	end
+end
+
+-- resets the highscore
+function reseths()
+	dset(0, 500)
+	dset(1, 400)
+	dset(2, 300)
+	dset(3, 200)
+	dset(4, 100)
+
+end
+
+
+function loadhs()
+	local _slot
+
+	if dget(0) == 1 then
+		-- load the data
+		_slot += 1
+		for i=1,#hs do
+
+			hs[i] = dget(_slot)
+		end
+	end
+
+end
+
+function savehs()
+
 end
 __gfx__
 0000000000077000015113b00000000000fee700000890007aaafaaa9a9999e9c3c3c3c3c3c3c3c0c3c3c3c3c3c3c3c300000000000000000000000000000000
