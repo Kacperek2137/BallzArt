@@ -554,7 +554,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x -1, pad_hitbox_y,1,pad_hitbox_height) then
 			if ball_box(pad_hitbox_x -3, pad_hitbox_y,3,pad_hitbox_height) then
 				debug = "left hit"
-				ball_x -= abs(pad_dx + pad_dy) * 2
+				ball_x -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
 
 			end
@@ -564,7 +564,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x + pad_hitbox_width +1, pad_hitbox_y,1,pad_hitbox_height) then
 			if ball_box(pad_hitbox_x + pad_hitbox_width +3, pad_hitbox_y,3,pad_hitbox_height) then
 				debug = "right hit"
-				ball_x += abs(pad_dx + pad_dy) * 2
+				ball_x += abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
 
 			end
@@ -575,7 +575,7 @@ function _update60()
 		if pad_position == "vertical" then
 
 			-- top pad check
-			if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
+			if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 3, pad_height , 3) then
 			--if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - pad_hitbox_width /2 -1, pad_hitbox_height, 1) then
 				ball_y -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dy = - ball_dy
@@ -585,9 +585,11 @@ function _update60()
 
 
 			-- bottom pad check
-			if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
-				ball_y += abs(pad_dx + pad_dy)
-
+			--if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_hitbox_height, pad_hitbox_width / 2, pad_hitbox_width /2) then
+			if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_width, pad_height , 3) then
+				ball_y += abs(pad_dx + pad_dy) * 2 + 5
+				ball_dy = - ball_dy
+				debug = "bottom hit"
 			end
 		end
 
