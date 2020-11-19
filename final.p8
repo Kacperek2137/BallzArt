@@ -312,95 +312,6 @@ function _update60()
 		-- updating the particles
 		updateparts()
 
-		-- target movement
-		target_x += target_dx
-		target_y += target_dy
-
-		-- top right corner hit
-		if target_x > 120 and target_y < 120 then
-			target_dx = 0
-			target_dy = target_dm
-		end
-
-		-- bottom right corner hit
-		if target_x > 120 and target_y > 120 then
-			target_dx = -target_dm
-			target_dy = 0
-		end
-
-
-		-- bottom left corner hit
-		if target_x < 7 and target_y > 120 then
-			target_dx = 0
-			target_dy = -target_dm
-		end
-
-		-- top left corner hit
-		if target_x < 7 and target_y < 7 then
-			target_dx = target_dm
-			target_dy = 0
-		end
-
-
-		-- sectarget movement
-
-		sectarget_x += sectarget_dx
-		sectarget_y += sectarget_dy
-
-		-- top right corner hit
-		if sectarget_x > 120 and sectarget_y < 120 then
-			sectarget_dx = 0
-			sectarget_dy = sectarget_dm
-		end
-
-		-- bottom right corner hit
-		if sectarget_x > 120 and sectarget_y > 120 then
-			sectarget_dx = -sectarget_dm
-			sectarget_dy = 0
-		end
-
-
-		-- bottom left corner hit
-		if sectarget_x < 7 and sectarget_y > 120 then
-			sectarget_dx = 0
-			sectarget_dy = -sectarget_dm
-		end
-
-		-- top left corner hit
-		if sectarget_x < 7 and sectarget_y < 7 then
-			sectarget_dx = sectarget_dm
-			sectarget_dy = 0
-		end
-
-		-- badtarget movement
-
-		badtarget_x += badtarget_dx
-		badtarget_y += badtarget_dy
-
-		-- top right corner hit
-		if badtarget_x > 120 and badtarget_y < 120 then
-			badtarget_dx = 0
-			badtarget_dy = badtarget_dm
-		end
-
-		-- bottom right corner hit
-		if badtarget_x > 120 and badtarget_y > 120 then
-			badtarget_dx = -badtarget_dm
-			badtarget_dy = 0
-		end
-
-
-		-- bottom left corner hit
-		if badtarget_x < 7 and badtarget_y > 120 then
-			badtarget_dx = 0
-			badtarget_dy = -badtarget_dm
-		end
-
-		-- top left corner hit
-		if badtarget_x < 7 and badtarget_y < 7 then
-			badtarget_dx = badtarget_dm
-			badtarget_dy = 0
-		end
 
 		-- ball movement
 
@@ -408,6 +319,9 @@ function _update60()
 		if ball_frosted == false then
 			ball_x += ball_dx
 			ball_y += ball_dy
+
+			
+			-- bug fix ball going out of border
 		else
 
 			ball_x += 0
@@ -810,7 +724,6 @@ function _draw()
 		-- ing system draw
 		draw_ing()
 
-		drawserveboxes()
 
 		--debug
 		
@@ -1002,6 +915,7 @@ function drawbackground()
 	-- background
 	rectfill(0,0,128,128,0)
 
+	drawserveboxes()
 	drawsmallbox()
 
 	-- big box - ramka
@@ -1439,6 +1353,9 @@ function drawwall()
 		spr(12,16 + 16* n,96,2,2)
 		n += 1
 	end
+
+	-- fix for the pattern
+	
 end
 
 function doshake()
@@ -1597,11 +1514,12 @@ end
 function drawhighscore()
 	local xoffset = -128
 
-	local highsocrexoffset = 10
+	local highsocrexoffset = 0
 	local highsocreyoffset = 10
 
 	--pset(0 -xoffset,0,7)
 
+	-- background pattern
 	local n = 0
 	for i=0,7 do
 		spr(139,0 + n - xoffset + highsocrexoffset,30,2,2)
@@ -1609,20 +1527,24 @@ function drawhighscore()
 		n += 16
 	end
 
-	-- header
-	print("high score", 45 - xoffset, 12,7)
-	-- bottom text
-	print("‹ menu",50 -xoffset,100,8)
 
 	-- box
-	rectfill(33 -xoffset + highsocrexoffset,20,75-xoffset + highsocrexoffset,78,2)
-	rect(33 -xoffset + highsocrexoffset,20,75-xoffset + highsocrexoffset,78,10)
+	rectfill(33 -xoffset + highsocrexoffset,20,94-xoffset + highsocrexoffset,78,2)
+	rect(33 -xoffset + highsocrexoffset,20,94-xoffset + highsocrexoffset,78,10)
 	-- letters
 	for i=1,5 do
 		print(hs[i],50 -xoffset + highsocrexoffset, 17 + i*10,7)
 		print(i,39 -xoffset + highsocrexoffset, 17 + i*10,7)
 
 	end
+
+	rectfill(41 -xoffset,8,87 -xoffset,20,2)
+	rect(41 -xoffset,8,87 -xoffset,20,10)
+	line(42 -xoffset,20,86 -xoffset,20,2)
+	-- header
+	print("high score", 45 - xoffset, 12,7)
+	-- bottom text
+	print("‹ menu",50 -xoffset,100,8)
 end
 
 -- resets the highscore
