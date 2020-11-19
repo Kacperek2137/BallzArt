@@ -332,6 +332,10 @@ function _update60()
 			-- wall collision sfx
 			sfx(1)
 
+			-- ball out of space bug fix
+			ball_x = mid(0,ball_x,127)
+		
+
 		end
 
 		if ball_x < 0 + ball_radius then
@@ -339,6 +343,8 @@ function _update60()
 			ball_dy = 1 * sign(ball_dy)
 			-- wall collision sfx
 			sfx(1)
+
+			ball_x = mid(0,ball_x,127)
 		end
 
 		if ball_y > 111 - ball_radius then
@@ -346,6 +352,8 @@ function _update60()
 			ball_dx = 1 * sign(ball_dx)
 			-- wall collision sfx
 			sfx(1)
+
+			ball_y = mid(0,ball_y,111)
 		end
 
 		if ball_y < 0 + ball_radius then
@@ -353,6 +361,9 @@ function _update60()
 			ball_dx = 1 * sign(ball_dx)
 			-- wall collision sfx
 			sfx(1)
+
+
+			ball_y = mid(0,ball_y,111)
 		end
 
 		-- horizontal
