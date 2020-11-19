@@ -539,14 +539,22 @@ function _update60()
 
 
 			-- left pad check
-			if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-				ball_x -= abs(pad_dx + pad_dy)
+			--if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+			--if ball_box(pad_hitbox_x -1, pad_hitbox_y,1,pad_hitbox_height) then
+			if ball_box(pad_hitbox_x -3, pad_hitbox_y,3,pad_hitbox_height) then
+				debug = "left hit"
+				ball_x -= abs(pad_dx + pad_dy) * 2
+				ball_dx = - ball_dx
 
 			end
 
 			-- right pad check
-			if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
-				ball_x += abs(pad_dx + pad_dy)
+			--if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
+			--if ball_box(pad_hitbox_x + pad_hitbox_width +1, pad_hitbox_y,1,pad_hitbox_height) then
+			if ball_box(pad_hitbox_x + pad_hitbox_width +3, pad_hitbox_y,3,pad_hitbox_height) then
+				debug = "right hit"
+				ball_x += abs(pad_dx + pad_dy) * 2
+				ball_dx = - ball_dx
 
 			end
 
@@ -557,7 +565,10 @@ function _update60()
 
 			-- top pad check
 			if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - 1, pad_hitbox_width / 2, pad_hitbox_width / 2) then
-				ball_y -= abs(pad_dx + pad_dy) * 2
+			--if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - pad_hitbox_width /2 -1, pad_hitbox_height, 1) then
+				ball_y -= abs(pad_dx + pad_dy) * 2 + 5
+				ball_dy = - ball_dy
+				debug = "top hit"
 
 			end
 
