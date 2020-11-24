@@ -3,6 +3,8 @@ function _init()
 	collision = false
 	debugnum = 10
 
+	top_type = flr(rnd(5) + 1)
+	bottom_type = flr(rnd(5) + 1)
 
 	--debug outline
 	outline_col = 0
@@ -37,7 +39,7 @@ function _init()
 
 	-- ball setup
 	ball_radius = 3
-	ball_x = 37
+	ball_x = 30
 	ball_y = 20
 	-- max speed
 	ball_dm = 0.5
@@ -47,6 +49,8 @@ function _init()
 	ball_ang = 0
 
 	ball_col = 9
+
+
 
 	-- freeze
 	freezetimer = 0
@@ -138,6 +142,7 @@ function _init()
 
 	-- order new ing adding
 	tic = 0
+	ings_avaible = {}
 
 	-- player score var
 	player_score = 0
@@ -183,8 +188,11 @@ function _init()
 	-- game
 	-- gameover
 
+	coin = 0
+
 	music(1)
 
+	--reseths()
 
 end
 
@@ -225,6 +233,11 @@ function _update60()
 
 
 	if scene == "gameover" then
+		if btn(5) then
+			scene = "menu"
+			game_vars_fresh_start()
+
+		end
 
 
 	end
@@ -238,6 +251,28 @@ function _update60()
 		--debug
 		debug = ''
 
+
+		-- ball collision against the serve boxes
+		if ball_box(0,0,16,16) then
+			-- bottom wall 
+			if ball_x < 16 then
+				ball_dy = - ball_dy
+			else
+				ball_dx = - ball_dx
+			end
+
+		end
+
+		-- bottom serve box
+		if ball_box(111,96,16,16) then
+			-- top
+			if ball_x >= 111 then
+				ball_dy = - ball_dy
+			else
+				ball_dx = - ball_dx
+			end
+
+		end
 
 		frosted_cooldown -= 1
 
@@ -282,12 +317,12 @@ function _update60()
 
 		-- debug
 		if btnp(4) then
-			spawnboom(50,50)
-			outline_col += 1
+			player_score += 500
+			--outline_col += 1
 			-- debug
-			if outline_col > 15 then
-				outline_col = 0
-			end
+			--if outline_col > 15 then
+				--outline_col = 0
+			--end
 		end
 
 
@@ -553,7 +588,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x - 1, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
 			--if ball_box(pad_hitbox_x -1, pad_hitbox_y,1,pad_hitbox_height) then
 			if ball_box(pad_hitbox_x -3, pad_hitbox_y,3,pad_hitbox_height) then
-				debug = "left hit"
+				--debug = "left hit"
 				ball_x -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
 
@@ -563,7 +598,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x + pad_hitbox_width, pad_hitbox_y + 1,1,pad_hitbox_height / 2) then
 			--if ball_box(pad_hitbox_x + pad_hitbox_width +1, pad_hitbox_y,1,pad_hitbox_height) then
 			if ball_box(pad_hitbox_x + pad_hitbox_width +3, pad_hitbox_y,3,pad_hitbox_height) then
-				debug = "right hit"
+				--debug = "right hit"
 				ball_x += abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
 
@@ -579,7 +614,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - pad_hitbox_width /2 -1, pad_hitbox_height, 1) then
 				ball_y -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dy = - ball_dy
-				debug = "top hit"
+				--debug = "top hit"
 
 			end
 
@@ -589,7 +624,7 @@ function _update60()
 			if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_width, pad_height , 3) then
 				ball_y += abs(pad_dx + pad_dy) * 2 + 5
 				ball_dy = - ball_dy
-				debug = "bottom hit"
+				--debug = "bottom hit"
 			end
 		end
 
@@ -681,6 +716,15 @@ function _draw()
 		-- background from mockup
 		drawbackground()
 
+		-- ing system draw
+		draw_ing()
+
+		
+		drawserveboxes()
+
+
+		--debug
+		print("AAAAA", 0,0,8)
 
 		-- test sprites
 		-- spr(1,60,101)
@@ -742,8 +786,6 @@ function _draw()
 
 
 
-		-- ing system draw
-		draw_ing()
 
 
 		--debug
@@ -936,7 +978,6 @@ function drawbackground()
 	-- background
 	rectfill(0,0,128,128,0)
 
-	drawserveboxes()
 	drawsmallbox()
 
 	-- big box - ramka
@@ -1025,7 +1066,7 @@ function drawbackground()
 
 
 
-	print(debug,30,30,1)
+	print(top_type,30,30,1)
 end
 
 
@@ -1137,6 +1178,10 @@ function update_order()
 		order_time = 0
 		scene = "gameover"
 		music(10)
+
+		insertscoretohighscore()
+		savehs()
+		
 	end
 
 	-- translating the order_time to % value
@@ -1302,27 +1347,102 @@ end
 function spawnnew_ing()
 	tic += 1
 
+	coin = flr(rnd(2))
+
+
+
+	local isbomb = flr(rnd(10))
+
+	if ing_1 > 0 then
+		ings_avaible[#ings_avaible + 1] = 1
+	end
+
+	if ing_2 > 0 then
+		ings_avaible[#ings_avaible + 1] = 2
+	end
+
+	if ing_3 > 0 then
+		ings_avaible[#ings_avaible + 1] = 3
+	end
+
+	if ing_4 > 0 then
+		ings_avaible[#ings_avaible + 1] = 4
+	end
+
+
+	-- don't overflow 
+	if #ings_avaible >= 5 then
+		ings_avaible = {}
+
+		if ing_1 > 0 then
+			ings_avaible[#ings_avaible + 1] = 1
+		end
+
+		if ing_2 > 0 then
+			ings_avaible[#ings_avaible + 1] = 2
+		end
+
+		if ing_3 > 0 then
+			ings_avaible[#ings_avaible + 1] = 3
+		end
+
+		if ing_4 > 0 then
+			ings_avaible[#ings_avaible + 1] = 4
+		end
+
+	end
 	-- previously 120
 	-- testing with 180
 	if tic > 180 then
 
-		--local top_type = flr(rnd(5) + 1)
-		--local bottom_type = flr(rnd(5) + 1)
-
-
 		if order_time > 0 then
 
-			add_ing(1,3,flr(rnd(5) + 1),"TOP")
-			add_ing(115,101,flr(rnd(5) + 1),"BOTTOM")
-			--add_ing(1,3,top_type,"TOP")
-			--add_ing(115,101,bottom_type,"BOTTOM")
+				--top_type = flr(rnd(5) + 1)
+				--debug = top_type
+				--bottom_type = flr(rnd(5) + 1)
+			
+				-- do we spawn bombs?
+				if rnd(1) >= 0.7 then
+					top_type = 5
+					bottom_type = 5
+				else
+
+					-- do we spawn perfect or inperfect ings?
+					if rnd(1) >= 0.5 then
+						top_type = ings_avaible[flr(rnd(#ings_avaible) +1)]
+						bottom_type = ings_avaible[flr(rnd(#ings_avaible) +1)]
+
+						if top_type == 0 then
+							top_type = 1
+						end
+
+						if bottom_type == 0 then
+							top_type = 2
+						end
+
+					else
+						top_type = flr(rnd(5) + 1)
+						bottom_type = flr(rnd(5) + 1)
+
+					end
+
+					-- that what we want turn
+						
+					end
+
+				end
+
+
+			--	add_ing(1,3,flr(rnd(5) + 1),"TOP")
+			--	add_ing(115,101,flr(rnd(5) + 1),"BOTTOM")
+			add_ing(1,3,top_type,"TOP")
+			add_ing(115,101,bottom_type,"BOTTOM")
 			tic = 0
-			--sfx of new ing added
 			sfx(7)
-			-- bomb comming
+				-- bomb comming
+			--end
 		end
 	end
-end
 
 function drawsmallbox()
 	local n = 0
@@ -1610,4 +1730,217 @@ function savehs()
 		savehs()
 
 	end
+end
+
+function insertscoretohighscore()
+	local greater_than_hs_array = {}
+
+	for i=1, #hs do 
+
+
+		-- avoiding the index error
+		if i == 1 or i == 5 then
+			if i == 1 then
+				if player_score > hs[i] then
+					hs[i + 1] = hs[i]
+					hs[i + 2] = hs[i + 1]
+					hs[i + 3] = hs[i + 2]
+					hs[i + 4] = hs[i + 3]
+					hs[i] = player_score
+					break
+				end
+			end
+
+			if i == 5 then
+
+				if player_score > hs[i] then
+					hs[i] = player_score
+					break
+				end
+
+			end
+
+		else
+			if player_score > hs[i] and player_score < hs[i + -1] then
+				hs[i] = player_score
+				hs[i +1] = hs[i]
+				break
+			end
+		end
+
+	end
+end
+
+function game_vars_fresh_start()
+	--debug
+	collision = false
+	debugnum = 10
+
+
+	--debug outline
+	outline_col = 0
+	-- animation sprite number
+	s = 17
+	-- animation delay
+	d = 30
+	-- background setup
+	line_col = 7
+	-- pad setup
+	pad_x = 55
+	pad_y = 63
+	--pad speed
+	pad_dx = 0
+	pad_dy = 0
+	pad_position = "horizontal"
+	pad_width = 30
+	pad_height = 3
+	pad_color = 3
+
+	pad_hitbox_x = 0
+	pad_hitbox_y = 0
+	pad_hitbox_width = 0
+	pad_hitbox_height= 0
+	pad_speed = 5
+
+
+	-- bouncebox left setup
+	--pad_bouncebox_left_x = 0
+	--pad_bouncebox_left_y = 0
+
+
+	-- ball setup
+	ball_radius = 3
+	ball_x = 30
+	ball_y = 20
+	-- max speed
+	ball_dm = 0.5
+	ball_dx = ball_dm
+	ball_dy = ball_dm
+
+	ball_ang = 0
+
+	ball_col = 9
+
+	-- freeze
+	freezetimer = 0
+	ball_frosted = false
+	frosted_timer = 0
+	-- target setup
+	target_x = rnd(100)
+	target_y = 6
+	target_radius = 5
+	-- max speed
+	target_dm = 0.25
+	-- initial setup for top left of the screen
+	target_dx = target_dm
+	target_dy = 0
+
+
+	-- sec target setup
+
+	sectarget_x = 6
+	sectarget_y = rnd(100)
+	sectarget_radius = 5
+	-- max speed
+	sectarget_dm = 0.25
+	-- initial setup for top left of the screen
+	sectarget_dx = 0
+	sectarget_dy = -target_dm
+	-- max speed
+
+
+	-- bad target setup
+	badtarget_sprite = 1
+	badtarget_x = rnd(100)
+	badtarget_y = 122
+	badtarget_radius = 5
+	-- max speed
+	badtarget_dm = 0.3
+	-- initial setup for bottom right corner
+	badtarget_dx = - badtarget_dm
+	badtarget_dy = 0
+
+	--score setup
+	score = 0
+
+
+
+	-- particles setup
+	part = {}
+
+
+	-- order system variables
+
+	order_time = 0
+
+	ingr_total_number = 5
+	total_orders = 0
+
+	-- number of n per ingredient
+	ing_1 = 0
+	ing_2 = 0 
+	ing_3 = 0
+	ing_4 = 0 
+	ing_5 = 0
+
+	-- starting ing_types array
+	ing_types_start = {ing_1,ing_2,ing_3,ing_4,ing_5}
+
+	-- how many ing types will be in play in this round
+	ing_ammount = 0
+
+	-- how many ings in this order are left to be disposed between ing types
+	ing_to_dispose = 0
+
+	-- how many total ings are on the start
+	start_ing_to_dispose = 0
+
+	-- ing speed
+	ing_speed = 0.5
+
+
+	-- order system update
+	frame = 0
+	sec = 0
+	order_time_procentage = 0
+	bar_col = 7
+	bar_x = 0
+
+	-- ingredient control setup
+	ing_list = {}
+
+	-- order new ing adding
+	tic = 0
+
+	-- player score var
+	player_score = 0
+
+
+	--screen shake vars
+	shake = 0
+
+	-- order is starting now debug
+	new_order()
+
+
+	-- white frame 
+	whiteframe = 0
+
+	frosted_cooldown = 0
+
+
+	-- camera moving
+	camerax = 0
+	camera_direction = 0 
+	cameratimer = 0
+	cameramoving = false
+
+
+	-- in which room are we now? 
+	-- -1 credits
+	-- 0 splash
+	-- 1 highscore
+	camera_active_room = 0
+
+	music(1)
 end
