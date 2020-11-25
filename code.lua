@@ -3,6 +3,11 @@ function _init()
 	collision = false
 	debugnum = 10
 
+	-- logo
+	logo_angle = 0
+	logo_y = 20
+	logo_tic = 0
+
 	top_type = flr(rnd(5) + 1)
 	bottom_type = flr(rnd(5) + 1)
 
@@ -144,6 +149,9 @@ function _init()
 	tic = 0
 	ings_avaible = {}
 
+	-- game over screen effect
+	ing_matrix_tic = 0
+
 	-- player score var
 	player_score = 0
 
@@ -180,6 +188,7 @@ function _init()
 
 	hs = {}
 	loadhs()
+	sort_high_score()
 
 
 	scene = "menu"
@@ -192,7 +201,7 @@ function _init()
 
 	music(1)
 
-	--reseths()
+	reseths()
 
 end
 
@@ -228,6 +237,15 @@ function _update60()
 
 		update_camera()
 
+
+		--logo smooth movement
+		logo_tic += 1
+		if logo_tic >= 1 then
+			logo_angle += 0.03 / 0.02
+			logo_y += sin(logo_angle / 200) 
+			logo_tic = 0
+		end
+
 			
 	end
 
@@ -235,6 +253,7 @@ function _update60()
 	if scene == "gameover" then
 		if btn(5) then
 			scene = "menu"
+
 			game_vars_fresh_start()
 
 		end
@@ -317,7 +336,8 @@ function _update60()
 
 		-- debug
 		if btnp(4) then
-			player_score += 500
+			player_score += 8001
+			order_time = -1
 			--outline_col += 1
 			-- debug
 			--if outline_col > 15 then
@@ -678,10 +698,10 @@ function _draw()
 		-- background pattern
 		drawbackgroundpattern()
 		-- logo
-		spr(129,35,20,8,7)
-		print("press \151 to start",33,80,8)
-		print("\145 highscore",45,90,8)
-		print("\139 credits",45,100,8)
+		spr(129,35,logo_y,8,7)
+		outline("press \151 to start",33,80,8,1)
+		outline("\145 highscore",45,90,1,8)
+		outline("\139 credits",45,100,1,8)
 		--debug
 
 		drawcredits()
@@ -700,102 +720,67 @@ function _draw()
 
 	if scene == "gameover" then
 		cls()
-		rectfill(0,0,127,127,0)
-		spr(64,35,20,8,4)
-		print("press x to start",33,80,8)
-		print("game over",33,70,8)
+
+		local y_offset = 15
+
+		ing_matrix_tic += 0.1
+
+		draw_game_scene()
+		rectfill(0,45 -y_offset,127,104 -y_offset,2)
+		rect(0,45 -y_offset,127,104 -y_offset,10)
+		--print("game over",45,50,7)
+		outline("game over", 45,50 -y_offset,8,0)
+
+		-- high score
+		for i=1,#hs do
+			-- if we have a match
+			if hs[i] == player_score then
+
+				if i == 1 then
+					print("first",22,70 -y_offset,10)
+					
+				end
+
+				if i == 2 then
+					print("second",22,70 -y_offset,6)
+				end
+
+				if i == 3 then
+					print("third",22,70 -y_offset,9)
+				end
+
+				if i == 4 then
+					print("fourth",20,70 -y_offset,7)
+				end
+
+				if i == 5 then
+					print("fifth",32,70 -y_offset,7)
+				end
+				print("on the highscore", 46, 70 -y_offset,7)
+
+			end
+
+		end
+
+		print("score:",42,60 -y_offset,7)
+		--print(player_score,70,60,7)
+		print(player_score,70,60 -y_offset,7)
+		outline("\151 restart",42,85 -y_offset,8,1)
+		outline("\142 menu",47,95 -y_offset,1,8)
+
+		spr(ing_matrix_tic,20,50 -y_offset)
+		spr(ing_matrix_tic,101,50 -y_offset)
+
+		if ing_matrix_tic >= 5 then
+			ing_matrix_tic = 1
+		end
+		-- TODO
+		-- spritey składników
 	end
 
 	if scene == "game" then
+		draw_game_scene()
 
-		cls()
-
-		doshake()
-
-
-		-- background from mockup
-		drawbackground()
-
-		-- ing system draw
-		draw_ing()
-
-		
-		drawserveboxes()
-
-
-		--debug
-		print("AAAAA", 0,0,8)
-
-		-- test sprites
-		-- spr(1,60,101)
-		-- spr(2,117,81)
-		-- spr(3,3,23)
-		-- spr(4,84,3)
-
-		-- animation test
-		-- spr(s,60,40)
-
-
-
-		-- target
-		-- circfill(target_x,target_y,target_radius,11)
-
-		-- sectarget
-		-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
-
-		-- bad target
-		--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
-		-- spr(badtarget_sprite,badtarget_x,badtarget_y)
-
-		-- player pad
-		--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-
-		--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
-
-		if pad_position == "horizontal" then
-			rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-		end
-
-		if pad_position == "vertical" then
-			rectfill(
-			pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
-			pad_y - pad_width / 2,
-			pad_x + pad_width /2,
-			pad_y + pad_width / 2,
-			pad_color
-			)
-		end
-
-		-- particles
-		drawparts()
-		--print(#part,1,1,10)
-
-
-		-- ball outline
-		circfill(ball_x,ball_y,ball_radius + 1, outline_col)
-		--ball
-		circfill(ball_x,ball_y,ball_radius, ball_col)
-
-
-
-		--camera(pad_x - 64,pad_y - 64 )
-
-		-- bouncebox left setup
-		--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
-
-
-
-
-
-
-		--debug
-		
-		-- draw the white frame on the explosion
-		if whiteframe < 5 then
-			rectfill(0,0,127,127,7)
-			whiteframe += 1
-
-		end
 	end
 
 
@@ -1066,7 +1051,6 @@ function drawbackground()
 
 
 
-	print(top_type,30,30,1)
 end
 
 
@@ -1180,6 +1164,7 @@ function update_order()
 		music(10)
 
 		insertscoretohighscore()
+		sort_high_score()
 		savehs()
 		
 	end
@@ -1636,7 +1621,7 @@ function drawcredits()
 
 	-- header
 	-- bottom text
-	print("menu \145",50 -xoffset,115,8)
+	outline("menu \145",50 -xoffset,115,1,8)
 
 	-- box
 	rectfill(33 -xoffset + highsocrexoffset + 4,20,75-xoffset + highsocrexoffset + 85,108,2)
@@ -1685,12 +1670,12 @@ function drawhighscore()
 	-- header
 	print("high score", 45 - xoffset, 12,7)
 	-- bottom text
-	print("\139 menu",50 -xoffset,100,8)
+	outline("\139 menu",50 -xoffset,100,1,8)
 end
 
 -- resets the highscore
 function reseths()
-	hs={500,400,300,200,100}
+	hs={500,7000,300,200,1000}
 	savehs()
 end
 
@@ -1733,42 +1718,24 @@ function savehs()
 end
 
 function insertscoretohighscore()
-	local greater_than_hs_array = {}
+	-- appends the high score to the end of the list
+	hs[#hs + 1] = player_score
 
-	for i=1, #hs do 
+end
 
 
-		-- avoiding the index error
-		if i == 1 or i == 5 then
-			if i == 1 then
-				if player_score > hs[i] then
-					hs[i + 1] = hs[i]
-					hs[i + 2] = hs[i + 1]
-					hs[i + 3] = hs[i + 2]
-					hs[i + 4] = hs[i + 3]
-					hs[i] = player_score
-					break
-				end
-			end
-
-			if i == 5 then
-
-				if player_score > hs[i] then
-					hs[i] = player_score
-					break
-				end
-
-			end
-
-		else
-			if player_score > hs[i] and player_score < hs[i + -1] then
-				hs[i] = player_score
-				hs[i +1] = hs[i]
-				break
-			end
-		end
+-- sorts the high score and deletes the last bit
+function sort_high_score()
+    for i=1,#hs do
+        local j = i
+        while j > 1 and hs[j-1] < hs[j] do
+            hs[j],hs[j-1] = hs[j-1],hs[j]
+            j = j - 1
+        end
 
 	end
+
+	hs[6] = nil
 end
 
 function game_vars_fresh_start()
@@ -1943,4 +1910,106 @@ function game_vars_fresh_start()
 	camera_active_room = 0
 
 	music(1)
+end
+
+function draw_game_scene()
+
+		cls()
+
+		doshake()
+
+
+		-- background from mockup
+		drawbackground()
+
+		-- ing system draw
+		draw_ing()
+
+		
+		drawserveboxes()
+
+
+
+		-- test sprites
+		-- spr(1,60,101)
+		-- spr(2,117,81)
+		-- spr(3,3,23)
+		-- spr(4,84,3)
+
+		-- animation test
+		-- spr(s,60,40)
+
+
+
+		-- target
+		-- circfill(target_x,target_y,target_radius,11)
+
+		-- sectarget
+		-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
+
+		-- bad target
+		--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+		-- spr(badtarget_sprite,badtarget_x,badtarget_y)
+
+		-- player pad
+		--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+
+		--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
+
+		if pad_position == "horizontal" then
+			rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+		end
+
+		if pad_position == "vertical" then
+			rectfill(
+			pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
+			pad_y - pad_width / 2,
+			pad_x + pad_width /2,
+			pad_y + pad_width / 2,
+			pad_color
+			)
+		end
+
+		-- particles
+		drawparts()
+		--print(#part,1,1,10)
+
+
+		-- ball outline
+		circfill(ball_x,ball_y,ball_radius + 1, outline_col)
+		--ball
+		circfill(ball_x,ball_y,ball_radius, ball_col)
+
+
+
+		--camera(pad_x - 64,pad_y - 64 )
+
+		-- bouncebox left setup
+		--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
+
+
+
+
+
+
+		--debug
+		
+		-- draw the white frame on the explosion
+		if whiteframe < 5 then
+			rectfill(0,0,127,127,7)
+			whiteframe += 1
+
+		end
+	end
+
+
+function outline(s,x,y,c1,c2)
+	for i=0,2 do
+	 for j=0,2 do
+	  if not(i==1 and j==1) then
+	   print(s,x+i,y+j,c1)
+	  end
+	 end
+	end
+	print(s,x+1,y+1,c2)
 end
