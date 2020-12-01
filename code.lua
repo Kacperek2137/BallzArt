@@ -2,6 +2,7 @@ function _init()
 	--debug
 	collision = false
 	debugnum = 10
+	game_scene_freeze = false
 
 	-- logo
 	logo_angle = 0
@@ -182,6 +183,9 @@ function _init()
 	-- 1 highscore
 	camera_active_room = 0
 
+	-- if true the bombs can go off
+	-- fixes the double bomb row
+	safebomb = false
 
 	-- high score
 	cartdata("lkg_picomaki")
@@ -201,7 +205,7 @@ function _init()
 
 	music(1)
 
-	reseths()
+	--reseths()
 
 end
 
@@ -242,7 +246,7 @@ function _update60()
 		logo_tic += 1
 		if logo_tic >= 1 then
 			logo_angle += 0.03 / 0.02
-			logo_y += sin(logo_angle / 200) 
+			--logo_y += sin(logo_angle / 200) 
 			logo_tic = 0
 		end
 
@@ -251,13 +255,16 @@ function _update60()
 
 
 	if scene == "gameover" then
+		whiteframe = 10
 		if btn(5) then
-			scene = "menu"
-
 			game_vars_fresh_start()
-
+			scene = "game"
 		end
 
+		if btn(4) then
+			game_vars_fresh_start()
+			scene = "menu"
+		end
 
 	end
 
@@ -336,9 +343,11 @@ function _update60()
 
 		-- debug
 		if btnp(4) then
-			player_score += 8001
-			order_time = -1
+
+			--player_score += 8001
+			--
 			--outline_col += 1
+			
 			-- debug
 			--if outline_col > 15 then
 				--outline_col = 0
@@ -472,6 +481,25 @@ function _update60()
 
 
 
+
+		if pad_x <= 13 or pad_x >= 84 then
+			if abs(pad_dx) > 1 then
+
+
+				if sign(pad_dx) == -1 then
+					pad_x = 100
+					pad_dx = -1
+				end
+
+
+				if sign(pad_dx) == 1 then
+					pad_dx = 1
+				end
+
+			
+			end
+
+		end
 
 
 
@@ -611,6 +639,7 @@ function _update60()
 				--debug = "left hit"
 				ball_x -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
+				sfx(0)
 
 			end
 
@@ -621,6 +650,7 @@ function _update60()
 				--debug = "right hit"
 				ball_x += abs(pad_dx + pad_dy) * 2 + 5
 				ball_dx = - ball_dx
+				sfx(0)
 
 			end
 
@@ -634,6 +664,7 @@ function _update60()
 			--if ball_box(pad_hitbox_x + pad_hitbox_width /2, pad_hitbox_y - pad_hitbox_width /2 -1, pad_hitbox_height, 1) then
 				ball_y -= abs(pad_dx + pad_dy) * 2 + 5
 				ball_dy = - ball_dy
+				sfx(0)
 				--debug = "top hit"
 
 			end
@@ -644,6 +675,7 @@ function _update60()
 			if ball_box(pad_hitbox_x + pad_hitbox_width / 2, pad_hitbox_y + pad_width, pad_height , 3) then
 				ball_y += abs(pad_dx + pad_dy) * 2 + 5
 				ball_dy = - ball_dy
+				sfx(0)
 				--debug = "bottom hit"
 			end
 		end
@@ -698,7 +730,7 @@ function _draw()
 		-- background pattern
 		drawbackgroundpattern()
 		-- logo
-		spr(129,35,logo_y,8,7)
+		spr(96,12,10,12,12)
 		outline("press \151 to start",33,80,8,1)
 		outline("\145 highscore",45,90,1,8)
 		outline("\139 credits",45,100,1,8)
@@ -721,11 +753,16 @@ function _draw()
 	if scene == "gameover" then
 		cls()
 
+		whiteframe += 10
+
 		local y_offset = 15
+
+		local is_on_highscore = false
 
 		ing_matrix_tic += 0.1
 
 		draw_game_scene()
+
 		rectfill(0,45 -y_offset,127,104 -y_offset,2)
 		rect(0,45 -y_offset,127,104 -y_offset,10)
 		--print("game over",45,50,7)
@@ -738,28 +775,44 @@ function _draw()
 
 				if i == 1 then
 					print("first",22,70 -y_offset,10)
+					is_on_highscore = true
 					
 				end
 
 				if i == 2 then
 					print("second",22,70 -y_offset,6)
+					is_on_highscore = true
 				end
 
 				if i == 3 then
 					print("third",22,70 -y_offset,9)
+					is_on_highscore = true
 				end
 
 				if i == 4 then
 					print("fourth",20,70 -y_offset,7)
+					is_on_highscore = true
 				end
 
 				if i == 5 then
 					print("fifth",32,70 -y_offset,7)
+					is_on_highscore = true
 				end
-				print("on the highscore", 46, 70 -y_offset,7)
+
+
 
 			end
 
+				if is_on_highscore == true then
+
+						print("on the highscore", 56, 70 -y_offset,7)
+				end
+
+				if is_on_highscore == false then
+					print("not", 30,70 -y_offset,7)
+					print("on the highscore", 46, 70 -y_offset,7)
+
+				end
 		end
 
 		print("score:",42,60 -y_offset,7)
@@ -920,9 +973,9 @@ function drawparts()
 			circfill(_p.x,_p.y,bigrange /2,col2)
 			circfill(_p.x,_p.y,bigrange /4, col3)
 
-			circfill(_p.x + rnd(5),_p.y + rnd(3),bigrange,col1)
-			circfill(_p.x - rnd(5),_p.y,bigrange /2,col2)
-			circfill(_p.x,_p.y + rnd(3),bigrange /4, col3)
+			circfill(_p.x + 2,_p.y + 3,bigrange,col1)
+			circfill(_p.x - 4,_p.y,bigrange /2,col2)
+			circfill(_p.x,_p.y + 2,bigrange /4, col3)
 			--pset(_p.x,_p.y,_p.col)
 		end
 	end
@@ -991,7 +1044,7 @@ function drawbackground()
 
 
 	-- pattern inside small box
-	rect(13,13,114,98,4)
+	--rect(13,13,114,98,4)
 
 
 
@@ -1336,6 +1389,7 @@ function spawnnew_ing()
 
 
 
+
 	local isbomb = flr(rnd(10))
 
 	if ing_1 > 0 then
@@ -1387,9 +1441,11 @@ function spawnnew_ing()
 				--bottom_type = flr(rnd(5) + 1)
 			
 				-- do we spawn bombs?
-				if rnd(1) >= 0.7 then
+
+				if rnd(1) >= 0.9 and safebomb == true then
 					top_type = 5
 					bottom_type = 5
+					safebomb = false
 				else
 
 					-- do we spawn perfect or inperfect ings?
@@ -1412,8 +1468,10 @@ function spawnnew_ing()
 					end
 
 					-- that what we want turn
+					safebomb = true
 						
 					end
+
 
 				end
 
@@ -1424,8 +1482,6 @@ function spawnnew_ing()
 			add_ing(115,101,bottom_type,"BOTTOM")
 			tic = 0
 			sfx(7)
-				-- bomb comming
-			--end
 		end
 	end
 
@@ -1438,7 +1494,7 @@ function drawsmallbox()
 
 		-- filling the row
 		for i=1,13 do
-			spr(33,13 + n * 8,13 + row * 8)
+			spr(36,13 + n * 8,13 + row * 8)
 			n += 1
 
 		end
@@ -1514,8 +1570,8 @@ function doshake()
 function drawbackgroundpattern()
 	local n = 0
 	for i=0,8 do
-		spr(139,0 + n,30,2,2)
-		spr(139,0 + n,46,2,2)
+		spr(206,0 + n,30,2,2)
+		spr(206,0 + n,46,2,2)
 		n += 16
 	end
 end
@@ -1594,8 +1650,8 @@ function drawcredits()
 
 	local n = 0
 	for i=0,7 do
-		spr(139,0 + n - xoffset,30,2,2)
-		spr(139,0 + n - xoffset,46,2,2)
+		spr(206,0 + n - xoffset,30,2,2)
+		spr(206,0 + n - xoffset,46,2,2)
 		n += 16
 	end
 
@@ -1605,8 +1661,8 @@ function drawcredits()
 	rect(45 -xoffset,8,82 -xoffset,30,10)
 	print("credits", 50 - xoffset, 12,7)
 
-	categories = {"code", "ux/ui", "degign", "vfx", "graphics", "sfx", "music", "mentoring"}
-	authors = {"gabriel", "gabriel", "gabriel,kacper", "gabriel", "ola", "kacper,kornel","kacper,kornel","konrad,jedrzej,kamil"}
+	categories = {"code", "graphics","sfx", "music","ux/ui", "degign", "vfx", "mentoring"}
+	authors = {"gabriel", "ola", "kacper,kornel", "kacper/kornel", "gabriel", "gabriel","gabriel","konrad,jedrzej,kamil"}
 	local highsocrexoffset = -35
 	local highsocreyoffset = 10
 
@@ -1614,8 +1670,8 @@ function drawcredits()
 
 	local n = 0
 	for i=0,7 do
-		spr(139,0 + n - xoffset + highsocrexoffset,30,2,2)
-		spr(139,0 + n - xoffset + highsocrexoffset,46,2,2)
+		spr(206,0 + n - xoffset + highsocrexoffset,30,2,2)
+		spr(206,0 + n - xoffset + highsocrexoffset,46,2,2)
 		n += 16
 	end
 
@@ -1648,8 +1704,8 @@ function drawhighscore()
 	-- background pattern
 	local n = 0
 	for i=0,7 do
-		spr(139,0 + n - xoffset + highsocrexoffset,30,2,2)
-		spr(139,0 + n - xoffset + highsocrexoffset,46,2,2)
+		spr(206,0 + n - xoffset + highsocrexoffset,30,2,2)
+		spr(206,0 + n - xoffset + highsocrexoffset,46,2,2)
 		n += 16
 	end
 
@@ -1914,91 +1970,93 @@ end
 
 function draw_game_scene()
 
-		cls()
+		if game_scene_freeze == false then
+			cls()
 
-		doshake()
-
-
-		-- background from mockup
-		drawbackground()
-
-		-- ing system draw
-		draw_ing()
-
-		
-		drawserveboxes()
+			doshake()
 
 
+			-- background from mockup
+			drawbackground()
 
-		-- test sprites
-		-- spr(1,60,101)
-		-- spr(2,117,81)
-		-- spr(3,3,23)
-		-- spr(4,84,3)
+			-- ing system draw
+			draw_ing()
 
-		-- animation test
-		-- spr(s,60,40)
+			
+			drawserveboxes()
 
 
 
-		-- target
-		-- circfill(target_x,target_y,target_radius,11)
+			-- test sprites
+			-- spr(1,60,101)
+			-- spr(2,117,81)
+			-- spr(3,3,23)
+			-- spr(4,84,3)
 
-		-- sectarget
-		-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
-
-		-- bad target
-		--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
-		-- spr(badtarget_sprite,badtarget_x,badtarget_y)
-
-		-- player pad
-		--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-
-		--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
-
-		if pad_position == "horizontal" then
-			rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
-		end
-
-		if pad_position == "vertical" then
-			rectfill(
-			pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
-			pad_y - pad_width / 2,
-			pad_x + pad_width /2,
-			pad_y + pad_width / 2,
-			pad_color
-			)
-		end
-
-		-- particles
-		drawparts()
-		--print(#part,1,1,10)
-
-
-		-- ball outline
-		circfill(ball_x,ball_y,ball_radius + 1, outline_col)
-		--ball
-		circfill(ball_x,ball_y,ball_radius, ball_col)
+			-- animation test
+			-- spr(s,60,40)
 
 
 
-		--camera(pad_x - 64,pad_y - 64 )
+			-- target
+			-- circfill(target_x,target_y,target_radius,11)
 
-		-- bouncebox left setup
-		--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
+			-- sectarget
+			-- circfill(sectarget_x,sectarget_y,sectarget_radius,11)
+
+			-- bad target
+			--circfill(badtarget_x,badtarget_y,badtarget_radius,8)
+			-- spr(badtarget_sprite,badtarget_x,badtarget_y)
+
+			-- player pad
+			--rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+
+			--rectfill(pad_hitbox_x, pad_hitbox_y, pad_hitbox_x + pad_width, pad_hitbox_y + pad_height, 10)
+
+			if pad_position == "horizontal" then
+				rectfill(pad_x, pad_y, pad_x + pad_width, pad_y + pad_height, pad_color)
+			end
+
+			if pad_position == "vertical" then
+				rectfill(
+				pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2,
+				pad_y - pad_width / 2,
+				pad_x + pad_width /2,
+				pad_y + pad_width / 2,
+				pad_color
+				)
+			end
+
+			-- particles
+			drawparts()
+			--print(#part,1,1,10)
+
+
+			-- ball outline
+			circfill(ball_x,ball_y,ball_radius + 1, outline_col)
+			--ball
+			circfill(ball_x,ball_y,ball_radius, ball_col)
+
+
+
+			--camera(pad_x - 64,pad_y - 64 )
+
+			-- bouncebox left setup
+			--rectfill(pad_bouncebox_left_x,pad_bouncebox_left_y,10,10)
 
 
 
 
 
 
-		--debug
-		
-		-- draw the white frame on the explosion
-		if whiteframe < 5 then
-			rectfill(0,0,127,127,7)
-			whiteframe += 1
+			--debug
+			
+			-- draw the white frame on the explosion
+			if whiteframe < 5 then
+				rectfill(0,0,127,127,7)
+				whiteframe += 1
 
+			end
 		end
 	end
 
