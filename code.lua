@@ -194,6 +194,9 @@ function _init()
 	loadhs()
 	sort_high_score()
 
+	-- order showing part
+	rows_table = {}
+	rows_number = 0
 
 	scene = "menu"
 	-- game scenes:
@@ -702,7 +705,10 @@ function _update60()
 
 		if ing_1 == 0 and ing_2 == 0 and ing_3 == 0 and ing_4 == 0 and ing_5 == 0 then
 			player_score += 250
+
+			show_completed_order()
 			new_order()
+			generate_new_sushi_set(5)
 			--new order sfx
 			sfx(6)
 		end
@@ -2070,4 +2076,8 @@ function outline(s,x,y,c1,c2)
 	 end
 	end
 	print(s,x+1,y+1,c2)
+end
+
+function show_completed_order()
+
 end
