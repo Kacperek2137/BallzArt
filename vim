@@ -204,7 +204,6 @@ function _init()
 	-- tutorial
 	-- game
 	-- gameover
-	--
 
 	coin = 0
 
@@ -277,9 +276,11 @@ function _update60()
 	end
 
 	if scene == "tutorial" then
-			if btnp(5) then
+		if tutorial_part == 1 then
+			if btn(5) then
 				tutorial_part += 1
 			end
+		end
 
 	end
 
@@ -851,86 +852,14 @@ function _draw()
 
 
 	if scene == "tutorial" then
-		if tutorial_part == 1 then
+		cls()
+		rectfill(0,0,127,127,2)
 
-			
-			cls()
-			local onboarding_buttons_x_offset = -5
-			rectfill(0,0,127,127,13)
-
-			print("welcome chef",5,5,7)
-			print("your goal is to", 5,25,7)
-			print("complete sushi orders",5,35,7)
-			print("by collecting the ingriedients",5,45,7)
-			print("with the cook ball",5,55,7)
-
-			print("x to continue",72,105,7)
-			circfill(53 + onboarding_buttons_x_offset,120,2,7)
-			circ(62 + onboarding_buttons_x_offset,120,2,6)
-			circ(71 + onboarding_buttons_x_offset,120,2,6)
-			circ(80 + onboarding_buttons_x_offset,120,2,6)
-		end
-
-		if tutorial_part == 2 then
-
-			
-			cls()
-			local onboarding_buttons_x_offset = -5
-			rectfill(0,0,127,127,13)
-
-			print("control the cook ball",5,5,7)
-			print("with the chef pad", 5,25,7)
-			print("using the arrow keys",5,35,7)
-			print("the pad can go up and down",5,45,7)
-			print("and left and right",5,55,7)
-
-			print("x to continue",72,105,7)
-			circ(53 + onboarding_buttons_x_offset,120,2,6)
-			circfill(62 + onboarding_buttons_x_offset,120,2,7)
-			circ(71 + onboarding_buttons_x_offset,120,2,6)
-			circ(80 + onboarding_buttons_x_offset,120,2,6)
-		end
-
-		if tutorial_part == 3 then
-
-			
-			cls()
-			local onboarding_buttons_x_offset = -5
-			rectfill(0,0,127,127,13)
-
-			print("freeze the ball",5,5,7)
-			print("if the ball outline is white", 5,25,7)
-			print("you can press x",5,35,7)
-			print("to freeze it for a moment",5,45,7)
-			print("use this wisely",5,55,7)
-
-			print("x to continue",72,105,7)
-			circ(53 + onboarding_buttons_x_offset,120,2,6)
-			circ(62 + onboarding_buttons_x_offset,120,2,6)
-			circfill(71 + onboarding_buttons_x_offset,120,2,7)
-			circ(80 + onboarding_buttons_x_offset,120,2,6)
-		end
-
-		if tutorial_part == 4 then
-
-			
-			cls()
-			local onboarding_buttons_x_offset = -5
-			rectfill(0,0,127,127,2)
-
-			print("watch the timer", 5,5,7)
-			print("if it goes down to zero",5,25,7)
-			print("you loose",5,35,7)
-			print("bombs decrease the timer",5,45,7)
-			print("so be careful",5,55,7)
-
-			--print("x to continue",5,95,7)
-			print("x to continue",72,105,7)
-			circ(53 + onboarding_buttons_x_offset,120,2,6)
-			circ(62 + onboarding_buttons_x_offset,120,2,6)
-			circ(71 + onboarding_buttons_x_offset,120,2,6)
-			circfill(80 + onboarding_buttons_x_offset,120,2,7)
-		end
+		print("welcome",5,10,7)
+		print("your goal is to", 5,20,7)
+		print("complete sushi orders",5,30,7)
+		print("by collecting the ingriedients",5,40,7)
+		print("by collecting the ingriedients",5,40,7)
 	end
 
 	if scene == "game" then

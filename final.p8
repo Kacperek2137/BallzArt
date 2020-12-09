@@ -204,10 +204,15 @@ function _init()
 	scene = "menu"
 	-- game scenes:
 	-- menu
+	-- tutorial
 	-- game
 	-- gameover
+	--
 
 	coin = 0
+
+	-- advance and skiping of tutorial
+	tutorial_part = 0
 
 	music(1)
 
@@ -220,7 +225,7 @@ function _update60()
 	if scene == "menu" then
 		-- x to start the game
 		if btnp(5) then
-			scene = "game"
+			scene = "tutorial"
 			music(4,5000)
 		end
 
@@ -271,6 +276,13 @@ function _update60()
 			game_vars_fresh_start()
 			scene = "menu"
 		end
+
+	end
+
+	if scene == "tutorial" then
+			if btnp(5) then
+				tutorial_part += 1
+			end
 
 	end
 
@@ -711,7 +723,7 @@ function _update60()
 
 			show_completed_order()
 			new_order()
-			generate_new_sushi_set(5)
+			--generate_new_sushi_set(5)
 			--new order sfx
 			sfx(6)
 		end
@@ -838,6 +850,90 @@ function _draw()
 		end
 		-- TODO
 		-- spritey składników
+	end
+
+
+	if scene == "tutorial" then
+		if tutorial_part == 1 then
+
+			
+			cls()
+			local onboarding_buttons_x_offset = -5
+			rectfill(0,0,127,127,13)
+
+			print("welcome chef",5,5,7)
+			print("your goal is to", 5,25,7)
+			print("complete sushi orders",5,35,7)
+			print("by collecting the ingriedients",5,45,7)
+			print("with the cook ball",5,55,7)
+
+			print("x to continue",72,105,7)
+			circfill(53 + onboarding_buttons_x_offset,120,2,7)
+			circ(62 + onboarding_buttons_x_offset,120,2,6)
+			circ(71 + onboarding_buttons_x_offset,120,2,6)
+			circ(80 + onboarding_buttons_x_offset,120,2,6)
+		end
+
+		if tutorial_part == 2 then
+
+			
+			cls()
+			local onboarding_buttons_x_offset = -5
+			rectfill(0,0,127,127,13)
+
+			print("control the cook ball",5,5,7)
+			print("with the chef pad", 5,25,7)
+			print("using the arrow keys",5,35,7)
+			print("the pad can go up and down",5,45,7)
+			print("and left and right",5,55,7)
+
+			print("x to continue",72,105,7)
+			circ(53 + onboarding_buttons_x_offset,120,2,6)
+			circfill(62 + onboarding_buttons_x_offset,120,2,7)
+			circ(71 + onboarding_buttons_x_offset,120,2,6)
+			circ(80 + onboarding_buttons_x_offset,120,2,6)
+		end
+
+		if tutorial_part == 3 then
+
+			
+			cls()
+			local onboarding_buttons_x_offset = -5
+			rectfill(0,0,127,127,13)
+
+			print("freeze the ball",5,5,7)
+			print("if the ball outline is white", 5,25,7)
+			print("you can press x",5,35,7)
+			print("to freeze it for a moment",5,45,7)
+			print("use this wisely",5,55,7)
+
+			print("x to continue",72,105,7)
+			circ(53 + onboarding_buttons_x_offset,120,2,6)
+			circ(62 + onboarding_buttons_x_offset,120,2,6)
+			circfill(71 + onboarding_buttons_x_offset,120,2,7)
+			circ(80 + onboarding_buttons_x_offset,120,2,6)
+		end
+
+		if tutorial_part == 4 then
+
+			
+			cls()
+			local onboarding_buttons_x_offset = -5
+			rectfill(0,0,127,127,2)
+
+			print("watch the timer", 5,5,7)
+			print("if it goes down to zero",5,25,7)
+			print("you loose",5,35,7)
+			print("bombs decrease the timer",5,45,7)
+			print("so be careful",5,55,7)
+
+			--print("x to continue",5,95,7)
+			print("x to continue",72,105,7)
+			circ(53 + onboarding_buttons_x_offset,120,2,6)
+			circ(62 + onboarding_buttons_x_offset,120,2,6)
+			circ(71 + onboarding_buttons_x_offset,120,2,6)
+			circfill(80 + onboarding_buttons_x_offset,120,2,7)
+		end
 	end
 
 	if scene == "game" then
@@ -2257,7 +2353,7 @@ __sfx__
 010a0000150401a7401a7450000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010600002403130025000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 011000000e5341c300250511175400000135450000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-01090000150301a0451d0452205525055270550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+01090000150301a0451d0452204525055270552a0552c0552f0553105534055000000000037000370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010600001473023730001001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010600001503117031190411b0411e041240512d05136051000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010900001e4401c4401a4401a4301943018430174301643015430144201342012420114200f4200e420175001b500185001b5001d5001d5001b5001b500000001b5001b500000000000000000000000000000000
