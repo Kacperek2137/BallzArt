@@ -284,6 +284,12 @@ function _update60()
 				tutorial_part += 1
 			end
 
+			if tutorial_part == 5 then
+				scene = "game"
+				tutorial_part = 0
+
+			end
+
 	end
 
 	if scene == "game" then
