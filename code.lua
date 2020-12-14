@@ -281,6 +281,10 @@ function _update60()
 				tutorial_part += 1
 			end
 
+			if btnp(4) then
+				tutorial_part -= 1
+			end
+
 			if tutorial_part == 5 then
 				scene = "game"
 				tutorial_part = 0
@@ -755,7 +759,7 @@ function _draw()
 		drawbackgroundpattern()
 		-- logo
 		spr(96,12,10,12,12)
-		outline("press \151 to start",33,80,8,1)
+		outline("press x to start",33,80,8,1)
 		outline("\145 highscore",45,90,1,8)
 		outline("\139 credits",45,100,1,8)
 		--debug
@@ -842,8 +846,8 @@ function _draw()
 		print("score:",42,60 -y_offset,7)
 		--print(player_score,70,60,7)
 		print(player_score,70,60 -y_offset,7)
-		outline("\151 restart",42,85 -y_offset,8,1)
-		outline("\142 menu",47,95 -y_offset,1,8)
+		outline("x restart",42,85 -y_offset,8,1)
+		outline("z menu",47,95 -y_offset,1,8)
 
 		spr(ing_matrix_tic,20,50 -y_offset)
 		spr(ing_matrix_tic,101,50 -y_offset)
@@ -871,6 +875,7 @@ function _draw()
 			print("with the cook ball",5,55,7)
 
 			print("x to continue",72,105,7)
+			print("z to go back",5,105,6)
 			circfill(53 + onboarding_buttons_x_offset,120,2,7)
 			circ(62 + onboarding_buttons_x_offset,120,2,6)
 			circ(71 + onboarding_buttons_x_offset,120,2,6)
@@ -891,6 +896,7 @@ function _draw()
 			print("and left and right",5,55,7)
 
 			print("x to continue",72,105,7)
+			print("z to go back",5,105,6)
 			circ(53 + onboarding_buttons_x_offset,120,2,6)
 			circfill(62 + onboarding_buttons_x_offset,120,2,7)
 			circ(71 + onboarding_buttons_x_offset,120,2,6)
@@ -911,6 +917,7 @@ function _draw()
 			print("use this wisely",5,55,7)
 
 			print("x to continue",72,105,7)
+			print("z to go back",5,105,6)
 			circ(53 + onboarding_buttons_x_offset,120,2,6)
 			circ(62 + onboarding_buttons_x_offset,120,2,6)
 			circfill(71 + onboarding_buttons_x_offset,120,2,7)
@@ -932,6 +939,7 @@ function _draw()
 
 			--print("x to continue",5,95,7)
 			print("x to continue",72,105,7)
+			print("z to go back",5,105,6)
 			circ(53 + onboarding_buttons_x_offset,120,2,6)
 			circ(62 + onboarding_buttons_x_offset,120,2,6)
 			circ(71 + onboarding_buttons_x_offset,120,2,6)
