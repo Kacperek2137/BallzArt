@@ -29,7 +29,7 @@ function _init()
 	pad_position = "horizontal"
 	pad_width = 30
 	pad_height = 3
-	pad_color = 3
+	pad_color = 2
 
 	pad_hitbox_x = 0
 	pad_hitbox_y = 0
@@ -223,7 +223,6 @@ function _update60()
 		-- x to start the game
 		if btnp(5) then
 			scene = "tutorial"
-			music(4,5000)
 		end
 
 		-- moving between rooms in the menu scene
@@ -267,6 +266,7 @@ function _update60()
 		if btn(5) then
 			game_vars_fresh_start()
 			scene = "game"
+			music(4,5000)
 		end
 
 		if btn(4) then
@@ -279,17 +279,30 @@ function _update60()
 	if scene == "tutorial" then
 			if btnp(5) then
 				tutorial_part += 1
+				sfx(34)
 			end
 
 			if btnp(4) then
 				tutorial_part -= 1
+				sfx(34)
+			end
+
+			if tutorial_part == 0 then
+				scene = "menu"
+				tutorial_part = 0
+				sfx(34)
+
 			end
 
 			if tutorial_part == 5 then
-				scene = "game"
 				tutorial_part = 0
+				scene = "game"
+				sfx(34)
+				music(4,5000)
 
 			end
+
+			
 
 	end
 
@@ -797,57 +810,13 @@ function _draw()
 		outline("game over", 45,50 -y_offset,8,0)
 
 		-- high score
-		for i=1,#hs do
-			-- if we have a match
-			if hs[i] == player_score then
-
-				if i == 1 then
-					print("first",22,70 -y_offset,10)
-					is_on_highscore = true
-					
-				end
-
-				if i == 2 then
-					print("second",22,70 -y_offset,6)
-					is_on_highscore = true
-				end
-
-				if i == 3 then
-					print("third",22,70 -y_offset,9)
-					is_on_highscore = true
-				end
-
-				if i == 4 then
-					print("fourth",20,70 -y_offset,7)
-					is_on_highscore = true
-				end
-
-				if i == 5 then
-					print("fifth",32,70 -y_offset,7)
-					is_on_highscore = true
-				end
 
 
-
-			end
-
-				if is_on_highscore == true then
-
-						print("on the highscore", 56, 70 -y_offset,7)
-				end
-
-				if is_on_highscore == false then
-					print("not", 30,70 -y_offset,7)
-					print("on the highscore", 46, 70 -y_offset,7)
-
-				end
-		end
-
-		print("score:",42,60 -y_offset,7)
+		print("score:",42,68 -y_offset,7)
 		--print(player_score,70,60,7)
-		print(player_score,70,60 -y_offset,7)
-		outline("x restart",42,85 -y_offset,8,1)
-		outline("z menu",47,95 -y_offset,1,8)
+		print(player_score,70,68 -y_offset,7)
+		outline("x restart",45,85 -y_offset,8,1)
+		outline("z menu",50,95 -y_offset,1,8)
 
 		spr(ing_matrix_tic,20,50 -y_offset)
 		spr(ing_matrix_tic,101,50 -y_offset)
@@ -871,8 +840,18 @@ function _draw()
 			print("welcome chef",5,5,7)
 			print("your goal is to", 5,25,7)
 			print("complete sushi orders",5,35,7)
-			print("by collecting the ingriedients",5,45,7)
-			print("with the cook ball",5,55,7)
+			spr(71,93,33,2,1)
+			spr(75,107,33)
+			print("by collecting",5,55,7)
+			print("the ingriedients",5,65,7)
+			spr(1,73,63)
+			spr(2,86,63)
+			spr(3,99,63)
+			spr(4,112,63)
+			print("with the cook ball",5,85,7)
+
+			circ(84,87,ball_radius + 1,2)
+			circfill(84,87,ball_radius,8)
 
 			print("x to continue",72,105,7)
 			print("z to go back",5,105,6)
@@ -887,13 +866,62 @@ function _draw()
 			
 			cls()
 			local onboarding_buttons_x_offset = -5
+
+			local gamepad_offset = 5
+			local gamepad_offset_y = -27
+
+
+			local vertical_pad_offset = -10
+
 			rectfill(0,0,127,127,13)
 
 			print("control the cook ball",5,5,7)
-			print("with the chef pad", 5,25,7)
-			print("using the arrow keys",5,35,7)
-			print("the pad can go up and down",5,45,7)
-			print("and left and right",5,55,7)
+			print("with the chef pad", 5,15,7)
+			print("using the arrow keys",5,25,7)
+			print("you can move",5,45,7)
+			print("in all directions",5,55,7)
+
+			-- left arrow
+			spr(14,90 + gamepad_offset,43 + gamepad_offset_y)
+
+			-- right arrow
+			spr(14,104 + gamepad_offset,43 + gamepad_offset_y,1,1,1,0)
+
+			-- top arrow
+			spr(46,97 + gamepad_offset,37 + gamepad_offset_y)
+
+			-- bottom arrow
+			spr(46,97 + gamepad_offset,49 + gamepad_offset_y,1,1,1,0)
+
+
+			local xoffset = -20
+
+
+
+			-- left arrow
+			spr(14,32 + xoffset,71)
+
+			rectfill(pad_x - 10 + xoffset, pad_y + 10, pad_x + pad_width - 10 + xoffset, pad_y + pad_height + 10, pad_color)
+
+			-- right arrow
+			spr(14,81 + xoffset,71,1,1,1,0)
+
+			rectfill(
+			pad_x + pad_width / 2 - pad_height / 2 - pad_height / 2 + 30,
+			pad_y - pad_width / 2 + 15 + vertical_pad_offset,
+			pad_x + pad_width / 2 + 30,
+			pad_y + pad_width / 2 + 15 + vertical_pad_offset,
+			pad_color
+			)
+
+			-- top arrow
+			spr(46,95,50 + vertical_pad_offset)
+
+			-- bottom arrow
+			spr(46,95,99 + vertical_pad_offset,1,1,1,0)
+
+			--print("the pad can go up and down",5,65,7)
+			--print("and left and right",5,75,7)
 
 			print("x to continue",72,105,7)
 			print("z to go back",5,105,6)
@@ -910,12 +938,25 @@ function _draw()
 			local onboarding_buttons_x_offset = -5
 			rectfill(0,0,127,127,13)
 
-			print("freeze the ball",5,5,7)
-			print("if the ball outline is white", 5,25,7)
-			print("you can press x",5,35,7)
-			print("to freeze it for a moment",5,45,7)
-			print("use this wisely",5,55,7)
+			print("if the ball outline is white", 5,5,7)
+			print("you can press x",5,15,7)
+			print("to freeze it for a moment",5,25,7)
+			print("x",59,50,6)
+			print("you can use freeze again",5,65,7)
+			print("once the outline goes white",5,75,7)
 
+			-- frosted ball
+			circfill(80,41,4,12)
+
+			circ(40,41,ball_radius + 1,7)
+			circfill(40,41,ball_radius,8)
+
+
+			-- arrow in between
+			-- left arrow
+			spr(31,56,38)
+
+			-- onboarding buttons
 			print("x to continue",72,105,7)
 			print("z to go back",5,105,6)
 			circ(53 + onboarding_buttons_x_offset,120,2,6)
@@ -932,10 +973,32 @@ function _draw()
 			rectfill(0,0,127,127,2)
 
 			print("watch the timer", 5,5,7)
+
+			-- progress bar box
+			rect(0,15,127,18,bar_col)
+
+			-- progress bar 
+			rectfill(0,15, 80,18,bar_col)
+
+
 			print("if it goes down to zero",5,25,7)
 			print("you loose",5,35,7)
-			print("bombs decrease the timer",5,45,7)
-			print("so be careful",5,55,7)
+
+			-- progress bar box
+			rect(0,45,127,48,8)
+
+			-- progress bar 
+			rectfill(0,15, 80,18,bar_col)
+
+
+
+
+
+			print("hiting the bombs",5,55,7)
+			spr(5,72,53)
+			print("damages the timer",5,65,7)
+			print("are you ready chef?",5,85,7)
+
 
 			--print("x to continue",5,95,7)
 			print("x to continue",72,105,7)
