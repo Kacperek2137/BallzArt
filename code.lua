@@ -994,8 +994,8 @@ function _draw()
 
 
 
-			print("hiting the bombs",5,55,7)
-			spr(5,72,53)
+			print("hitting the bombs",5,55,7)
+			spr(5,76,53)
 			print("damages the timer",5,65,7)
 			print("are you ready chef?",5,85,7)
 
